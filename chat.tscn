@@ -1,0 +1,65 @@
+[gd_scene format=3 uid="uid://xvhh2xbl4dvf"]
+
+[node name="Chat" type="Control"]
+layout_mode = 3
+anchor_right = 0.158
+anchor_bottom = 0.156
+offset_right = -182.016
+offset_bottom = -101.088
+
+[node name="Panel" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 1152.0
+offset_bottom = 648.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+layout_mode = 0
+offset_right = 1152.0
+offset_bottom = 648.0
+
+[node name="Listen" type="HBoxContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="Connect" type="HBoxContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="Host" type="LineEdit" parent="Panel/VBoxContainer/Connect"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "ws://localhost:8000/test/"
+placeholder_text = "ws://my.server/path/"
+
+[node name="Connection" type="Button" parent="Panel/VBoxContainer/Connect"]
+layout_mode = 2
+text = "Connect"
+
+[node name="Port" type="SpinBox" parent="Panel/VBoxContainer/Connect"]
+layout_mode = 2
+min_value = 1.0
+max_value = 65535.0
+value = 8000.0
+
+[node name="Listen" type="Button" parent="Panel/VBoxContainer/Connect"]
+layout_mode = 2
+text = "Begin Listening"
+
+[node name="Send" type="HBoxContainer" parent="Panel/VBoxContainer"]
+layout_mode = 2
+
+[node name="LineEdit" type="LineEdit" parent="Panel/VBoxContainer/Send"]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "Enter text here..."
+
+[node name="Send" type="Button" parent="Panel/VBoxContainer/Send"]
+layout_mode = 2
+text = "Send"
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Panel/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3

@@ -1,0 +1,54 @@
+[gd_scene load_steps=4 format=3 uid="uid://cgkdckgj4ljnl"]
+
+[ext_resource type="PackedScene" uid="uid://xvhh2xbl4dvf" path="res://chat.tscn" id="1_g74nb"]
+[ext_resource type="Script" path="res://WebSocketServer.cs" id="2_tmq2h"]
+[ext_resource type="Script" path="res://ChatServer.cs" id="2_x1mrr"]
+
+[node name="Server" node_paths=PackedStringArray("_server", "_logDest", "_lineEdit", "_port") instance=ExtResource("1_g74nb")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("2_x1mrr")
+_server = NodePath("WebSocketServer")
+_logDest = NodePath("Panel/VBoxContainer/RichTextLabel")
+_lineEdit = NodePath("Panel/VBoxContainer/Send/LineEdit")
+_port = NodePath("Panel/VBoxContainer/Connect/Port")
+
+[node name="WebSocketServer" type="Node2D" parent="." index="0"]
+script = ExtResource("2_tmq2h")
+supportedProtocols = PackedStringArray("demo-chat")
+
+[node name="Panel" parent="." index="1"]
+offset_right = 0.0
+offset_bottom = 0.0
+
+[node name="VBoxContainer" parent="Panel" index="0"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Host" parent="Panel/VBoxContainer/Connect" index="0"]
+visible = false
+
+[node name="Connection" parent="Panel/VBoxContainer/Connect" index="1"]
+visible = false
+
+[node name="Listen" parent="Panel/VBoxContainer/Connect" index="3"]
+toggle_mode = true
+
+[connection signal="ClientConnected" from="WebSocketServer" to="." method="OnWebSocketServerClientConnected"]
+[connection signal="ClientDisconnected" from="WebSocketServer" to="." method="OnWebSocketServerClientDisconnected"]
+[connection signal="MessageReceived" from="WebSocketServer" to="." method="OnWebSocketServerMessageReceived"]
+[connection signal="toggled" from="Panel/VBoxContainer/Connect/Listen" to="." method="OnListenToggled"]
+[connection signal="pressed" from="Panel/VBoxContainer/Send/Send" to="." method="OnSendPressed"]

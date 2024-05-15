@@ -1,0 +1,96 @@
+[gd_scene load_steps=4 format=3 uid="uid://cd0xky7s2w8dl"]
+
+[ext_resource type="PackedScene" uid="uid://xvhh2xbl4dvf" path="res://chat.tscn" id="1_8facw"]
+[ext_resource type="Script" path="res://ChatClient.cs" id="2_lt00d"]
+[ext_resource type="Script" path="res://WebSocketClient.cs" id="3_d7anu"]
+
+[node name="Client" node_paths=PackedStringArray("_client", "_logDest", "_lineEdit", "_host") instance=ExtResource("1_8facw")]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("2_lt00d")
+_client = NodePath("WebSocketClient")
+_logDest = NodePath("Panel/VBoxContainer/RichTextLabel")
+_lineEdit = NodePath("Panel/VBoxContainer/Send/LineEdit")
+_host = NodePath("Panel/VBoxContainer/Connect/Host")
+
+[node name="WebSocketClient" type="Node2D" parent="." index="0"]
+script = ExtResource("3_d7anu")
+supportedProtocols = PackedStringArray("demo-chat")
+
+[node name="Panel" parent="." index="1"]
+offset_right = 0.0
+offset_bottom = 0.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer" parent="Panel" index="0"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+mouse_filter = 0
+
+[node name="Connection" parent="Panel/VBoxContainer/Connect" index="1"]
+toggle_mode = true
+
+[node name="Port" parent="Panel/VBoxContainer/Connect" index="2"]
+visible = false
+
+[node name="Listen" parent="Panel/VBoxContainer/Connect" index="3"]
+visible = false
+
+[node name="Room" type="HBoxContainer" parent="Panel/VBoxContainer" index="3"]
+layout_mode = 2
+
+[node name="CreateRoom" type="Button" parent="Panel/VBoxContainer/Room" index="0"]
+layout_mode = 2
+text = "Create Room"
+
+[node name="JoinRoom" type="Button" parent="Panel/VBoxContainer/Room" index="1"]
+layout_mode = 2
+text = "Join Room"
+
+[node name="RoomID" type="SpinBox" parent="Panel/VBoxContainer/Room" index="2"]
+layout_mode = 2
+min_value = 1.0
+max_value = 65535.0
+value = 2.0
+
+[node name="RPS" type="HBoxContainer" parent="Panel/VBoxContainer" index="4"]
+layout_mode = 2
+
+[node name="Rock" type="Button" parent="Panel/VBoxContainer/RPS" index="0"]
+layout_mode = 2
+text = "Rock"
+
+[node name="Paper" type="Button" parent="Panel/VBoxContainer/RPS" index="1"]
+layout_mode = 2
+text = "Paper"
+
+[node name="Scissors" type="Button" parent="Panel/VBoxContainer/RPS" index="2"]
+layout_mode = 2
+text = "Scissors"
+
+[connection signal="ConnectedToServer" from="WebSocketClient" to="." method="OnWebSocketClientConnectedToServer"]
+[connection signal="ConnectionClosed" from="WebSocketClient" to="." method="OnWebSocketClientConnectionClosed"]
+[connection signal="MessageReceived" from="WebSocketClient" to="." method="OnWebSocketClientMessageReceived"]
+[connection signal="toggled" from="Panel/VBoxContainer/Connect/Connection" to="." method="OnConnectToggled"]
+[connection signal="pressed" from="Panel/VBoxContainer/Send/Send" to="." method="OnSendPressed"]
+[connection signal="pressed" from="Panel/VBoxContainer/Room/CreateRoom" to="." method="OnSendPressed"]
+[connection signal="pressed" from="Panel/VBoxContainer/Room/JoinRoom" to="." method="OnSendPressed"]
+[connection signal="pressed" from="Panel/VBoxContainer/RPS/Rock" to="." method="OnSendPressed"]
+[connection signal="pressed" from="Panel/VBoxContainer/RPS/Paper" to="." method="OnSendPressed"]
+[connection signal="pressed" from="Panel/VBoxContainer/RPS/Scissors" to="." method="OnSendPressed"]
