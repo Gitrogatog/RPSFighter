@@ -11,10 +11,11 @@ public partial class ServerInputManager : Node
     {
         BaseFighter fighter = battleManager.GetActiveFighter(playerIndex);
         if (fighter == null) return false;
+        return true;
     }
     bool RegisterSwap(int playerIndex, int swapIndex)
     {
-
+        return true;
     }
     void RegisterSelectedAction(int playerIndex, IAction action)
     {
