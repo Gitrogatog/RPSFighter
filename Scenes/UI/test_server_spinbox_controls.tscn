@@ -1,0 +1,50 @@
+[gd_scene load_steps=2 format=3 uid="uid://dpotj1s8yijjq"]
+
+[ext_resource type="Script" path="res://Scenes/UI/TestSpinboxUI.cs" id="1_5lcbd"]
+
+[node name="P1 Controls" type="Control" node_paths=PackedStringArray("spinBox")]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_5lcbd")
+spinBox = NodePath("SpinBox")
+
+[node name="TextEdit" type="RichTextLabel" parent="."]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 7.0
+offset_right = 137.0
+offset_bottom = 30.0
+text = "Player 1 controls"
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+
+[node name="Action" type="Button" parent="."]
+layout_mode = 0
+offset_left = 15.0
+offset_top = 46.0
+offset_right = 73.0
+offset_bottom = 77.0
+text = "Action"
+
+[node name="Swap" type="Button" parent="."]
+layout_mode = 0
+offset_left = 81.0
+offset_top = 44.0
+offset_right = 139.0
+offset_bottom = 75.0
+text = "Swap"
+
+[node name="SpinBox" type="SpinBox" parent="."]
+layout_mode = 0
+offset_left = 37.0
+offset_top = 97.0
+offset_right = 120.063
+offset_bottom = 128.0
+min_value = -3.0
+max_value = 5.0
+
+[connection signal="pressed" from="Action" to="." method="SelectAction"]
+[connection signal="pressed" from="Swap" to="." method="SelectSwap"]

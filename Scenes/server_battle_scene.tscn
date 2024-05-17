@@ -1,0 +1,97 @@
+[gd_scene load_steps=8 format=3 uid="uid://dt1dhmfv31be"]
+
+[ext_resource type="Script" path="res://Scenes/Managers/ServerBattleManager.cs" id="1_g8li7"]
+[ext_resource type="Script" path="res://Scenes/Managers/ServerInputManager.cs" id="2_ibjqf"]
+[ext_resource type="Resource" uid="uid://d0h3u23gex3ou" path="res://Resources/Fighters/F1Data.tres" id="2_r5k6e"]
+[ext_resource type="Script" path="res://Scenes/Managers/ServerTurnManager.cs" id="2_t5ok6"]
+[ext_resource type="Script" path="res://Scenes/Managers/ServerLogManager.cs" id="3_cm484"]
+[ext_resource type="Resource" uid="uid://xk3ip3xldtqe" path="res://Resources/Fighters/F2Data.tres" id="3_kf7kb"]
+[ext_resource type="PackedScene" uid="uid://dpotj1s8yijjq" path="res://Scenes/UI/test_server_spinbox_controls.tscn" id="4_8uj8e"]
+
+[node name="ServerBattleScene" type="Node" node_paths=PackedStringArray("turnManager")]
+script = ExtResource("1_g8li7")
+p1FighterData = Array[Resource]([ExtResource("2_r5k6e"), ExtResource("3_kf7kb")])
+p2FighterData = Array[Resource]([ExtResource("2_r5k6e"), ExtResource("3_kf7kb")])
+turnManager = NodePath("Turn Manager")
+
+[node name="Turn Manager" type="Node" parent="." node_paths=PackedStringArray("logManager")]
+script = ExtResource("2_t5ok6")
+logManager = NodePath("../Log Manager")
+
+[node name="Input Manager" type="Node" parent="." node_paths=PackedStringArray("battleManager")]
+script = ExtResource("2_ibjqf")
+battleManager = NodePath("../Turn Manager")
+
+[node name="Log Manager" type="Node" parent="."]
+script = ExtResource("3_cm484")
+
+[node name="Fighters" type="Node" parent="."]
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Panel" type="Panel" parent="Control"]
+layout_mode = 0
+offset_left = 1.0
+offset_top = -10.0
+offset_right = 501.0
+offset_bottom = 151.0
+
+[node name="P1 Controls" parent="Control/Panel" node_paths=PackedStringArray("inputManager") instance=ExtResource("4_8uj8e")]
+inputManager = NodePath("../../../Input Manager")
+
+[node name="Swap" parent="Control/Panel/P1 Controls" index="2"]
+offset_left = 82.0
+offset_top = 48.0
+offset_right = 140.0
+offset_bottom = 79.0
+
+[node name="P1 Controls2" parent="Control/Panel" node_paths=PackedStringArray("inputManager") instance=ExtResource("4_8uj8e")]
+offset_left = 284.0
+offset_top = 3.0
+offset_right = 324.0
+offset_bottom = 43.0
+playerIndex = 1
+inputManager = NodePath("../../../Input Manager")
+
+[node name="TextEdit" parent="Control/Panel/P1 Controls2" index="0"]
+text = "Player 2 controls"
+
+[node name="Swap" parent="Control/Panel/P1 Controls2" index="2"]
+offset_left = 79.0
+offset_top = 49.0
+offset_right = 137.0
+offset_bottom = 80.0
+
+[node name="Run Turn" type="Button" parent="Control/Panel"]
+layout_mode = 0
+offset_left = 181.0
+offset_top = 82.0
+offset_right = 265.0
+offset_bottom = 113.0
+text = "Run Turn!"
+
+[node name="Reset Turn" type="Button" parent="Control/Panel"]
+layout_mode = 0
+offset_left = 182.0
+offset_top = 120.0
+offset_right = 266.0
+offset_bottom = 151.0
+text = "Reset Turn"
+
+[node name="Battle State" type="Button" parent="Control/Panel"]
+layout_mode = 0
+offset_left = 180.0
+offset_top = 40.0
+offset_right = 272.0
+offset_bottom = 71.0
+text = "Print State"
+
+[connection signal="pressed" from="Control/Panel/Run Turn" to="Input Manager" method="SendTurnsToBattleManager"]
+[connection signal="pressed" from="Control/Panel/Battle State" to="Turn Manager" method="PrintBattleState"]
+
+[editable path="Control/Panel/P1 Controls"]
+[editable path="Control/Panel/P1 Controls2"]

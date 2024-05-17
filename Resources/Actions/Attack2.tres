@@ -1,0 +1,11 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://bnkgss5xt7tin"]
+
+[ext_resource type="Script" path="res://Resources/AttackActionData.cs" id="1_ag4mt"]
+
+[resource]
+script = ExtResource("1_ag4mt")
+Damage = 2
+Hits = 4
+typing = 2
+Name = "Scissor Hits"
+Priority = 0

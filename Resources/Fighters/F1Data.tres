@@ -1,0 +1,14 @@
+[gd_resource type="Resource" load_steps=3 format=3 uid="uid://d0h3u23gex3ou"]
+
+[ext_resource type="Resource" uid="uid://xlqx73av0ggq" path="res://Resources/Actions/Attack1.tres" id="1_175fl"]
+[ext_resource type="Script" path="res://Resources/FighterData.cs" id="1_chug0"]
+
+[resource]
+script = ExtResource("1_chug0")
+Health = 20
+Attack = 2
+Defense = 0
+Speed = 3
+fighterTyping = 0
+actions = Array[Resource]([ExtResource("1_175fl")])
+Name = "rock man"

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://qb5opjs1qtwo"]
+
+[ext_resource type="Script" path="res://Resources/AttackActionData.cs" id="1_n40en"]
+
+[resource]
+script = ExtResource("1_n40en")
+Damage = 4
+Hits = 3
+typing = 1
+Name = "Paper Cuts"
+Priority = 0

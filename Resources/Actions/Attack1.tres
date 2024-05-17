@@ -1,0 +1,11 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://xlqx73av0ggq"]
+
+[ext_resource type="Script" path="res://Resources/AttackActionData.cs" id="1_ae3n0"]
+
+[resource]
+script = ExtResource("1_ae3n0")
+Damage = 3
+Hits = 1
+typing = 0
+Name = "rock punch"
+Priority = 0
