@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://ChatClient.cs" id="2_lt00d"]
 [ext_resource type="Script" path="res://WebSocketClient.cs" id="3_d7anu"]
 
-[node name="Client" node_paths=PackedStringArray("_client", "_logDest", "_lineEdit", "_host") instance=ExtResource("1_8facw")]
+[node name="Client" node_paths=PackedStringArray("_client", "_logDest", "_lineEdit", "_host", "_roomID") instance=ExtResource("1_8facw")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -19,6 +19,7 @@ _client = NodePath("WebSocketClient")
 _logDest = NodePath("Panel/VBoxContainer/RichTextLabel")
 _lineEdit = NodePath("Panel/VBoxContainer/Send/LineEdit")
 _host = NodePath("Panel/VBoxContainer/Connect/Host")
+_roomID = NodePath("Panel/VBoxContainer/Room/RoomID")
 
 [node name="WebSocketClient" type="Node2D" parent="." index="0"]
 script = ExtResource("3_d7anu")
@@ -63,7 +64,11 @@ text = "Create Room"
 layout_mode = 2
 text = "Join Room"
 
-[node name="RoomID" type="SpinBox" parent="Panel/VBoxContainer/Room" index="2"]
+[node name="ExitRoom" type="Button" parent="Panel/VBoxContainer/Room" index="2"]
+layout_mode = 2
+text = "Exit Room"
+
+[node name="RoomID" type="SpinBox" parent="Panel/VBoxContainer/Room" index="3"]
 layout_mode = 2
 min_value = 1.0
 max_value = 65535.0
@@ -89,8 +94,9 @@ text = "Scissors"
 [connection signal="MessageReceived" from="WebSocketClient" to="." method="OnWebSocketClientMessageReceived"]
 [connection signal="toggled" from="Panel/VBoxContainer/Connect/Connection" to="." method="OnConnectToggled"]
 [connection signal="pressed" from="Panel/VBoxContainer/Send/Send" to="." method="OnSendPressed"]
-[connection signal="pressed" from="Panel/VBoxContainer/Room/CreateRoom" to="." method="OnSendPressed"]
-[connection signal="pressed" from="Panel/VBoxContainer/Room/JoinRoom" to="." method="OnSendPressed"]
+[connection signal="pressed" from="Panel/VBoxContainer/Room/CreateRoom" to="." method="OnCreateRoomPressed"]
+[connection signal="pressed" from="Panel/VBoxContainer/Room/JoinRoom" to="." method="OnJoinRoomPressed"]
+[connection signal="pressed" from="Panel/VBoxContainer/Room/ExitRoom" to="." method="OnExitRoomPressed"]
 [connection signal="pressed" from="Panel/VBoxContainer/RPS/Rock" to="." method="OnSendPressed"]
 [connection signal="pressed" from="Panel/VBoxContainer/RPS/Paper" to="." method="OnSendPressed"]
 [connection signal="pressed" from="Panel/VBoxContainer/RPS/Scissors" to="." method="OnSendPressed"]

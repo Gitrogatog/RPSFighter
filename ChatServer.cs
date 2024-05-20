@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Godot;
+using System.Text.Json;
 
 public partial class ChatServer : Control
 {
@@ -30,19 +31,95 @@ public partial class ChatServer : Control
     }
     void OnWebSocketServerMessageReceived(int peerId, string message)
     {
-        if (message[0] == '!')
-        {
-            ProcessClientRequest(peerId, message);
-            return;
-        }
+        // if (message[0] == '!')
+        // {
+
+        //     return;
+        // }
+        ProcessClientRequest(peerId, message);
         Info($"Server received data from peer {peerId}: {message}");
         _server.Send(-peerId, $"{peerId} Says: {message}");
     }
 
     void ProcessClientRequest(int peerID, string message)
     {
-
+        GD.Print($"server got message: {message}");
+        ClientToServerMessage messageData = JsonSerializer.Deserialize<ClientToServerMessage>(message);
+        GD.Print($"messageData type: {messageData.messageType}, sender id: {peerID}, messageData data: {messageData.data}");
+        switch (messageData.messageType)
+        {
+            case ClientToServerMessageType.CreateRoom:
+                CreateRoomRequest(peerID);
+                break;
+            case ClientToServerMessageType.JoinRoom:
+                int roomID = messageData.data.ToInt();
+                JoinRoomRequest(peerID, roomID);
+                break;
+            case ClientToServerMessageType.ExitRoom:
+                ExitRoomRequest(peerID);
+                break;
+                // case ClientToServerMessageType.:
+                //     break;
+        }
+        // Variant parsed = Json.ParseString(message);
+        // GD.Print($"received type: {parsed.VariantType}");
+        // // GD.Print($"received as string: {parsed}");
+        // GD.Print($"received contents: {parsed}");
     }
+
+    void CreateRoomRequest(int peerID)
+    {
+        if (ServerRoom.pIDToRoomID.ContainsKey(peerID))
+        {
+            SendMessage(peerID, ServerToClientMessageType.Error, "You're already in a room!");
+        }
+        else
+        {
+
+            ServerRoom room = ServerRoom.CreateRoom();
+            room.AddPlayer(peerID);
+            int roomID = room.roomID;
+            GD.Print($"Adding player {peerID} to {roomID}");
+            SendMessage(peerID, ServerToClientMessageType.ConfirmJoin, roomID.ToString());
+        }
+    }
+
+    void JoinRoomRequest(int peerID, int roomID)
+    {
+        if (ServerRoom.roomIDTable.ContainsKey(roomID))
+        {
+            if (ServerRoom.roomIDTable[roomID].AddPlayer(peerID))
+            {
+                SendMessage(peerID, ServerToClientMessageType.ConfirmJoin, roomID.ToString());
+            }
+            else
+            {
+                SendMessage(peerID, ServerToClientMessageType.Error, $"Room with id {roomID} is full");
+            }
+        }
+        else
+        {
+            SendMessage(peerID, ServerToClientMessageType.Error, $"No room with id {roomID}");
+        }
+    }
+
+    void ExitRoomRequest(int peerID)
+    {
+        if (ServerRoom.pIDToRoomID.ContainsKey(peerID))
+        {
+            int room = ServerRoom.pIDToRoomID[peerID];
+            if (ServerRoom.roomIDTable[room].RemovePlayer(peerID))
+            {
+                SendMessage(peerID, ServerToClientMessageType.Alert, "You successfully left your room");
+            }
+            else
+            {
+                SendMessage(peerID, ServerToClientMessageType.Alert, "You are in a room, but failed to leave");
+            }
+        }
+        SendMessage(peerID, ServerToClientMessageType.Alert, "You are NOT in a room");
+    }
+
 
     // UI signals
     void OnSendPressed()
@@ -70,5 +147,10 @@ public partial class ChatServer : Control
             return;
         }
         Info($"Listing on port {port}, supported protocols {_server.supportedProtocols[0]}");
+    }
+    void SendMessage(int peerID, ServerToClientMessageType messageType, string data = "")
+    {
+        ServerToClientMessage message = new ServerToClientMessage(messageType, data);
+        _server.Send(peerID, JsonSerializer.Serialize(message));
     }
 }

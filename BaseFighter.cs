@@ -9,7 +9,7 @@ public partial class BaseFighter : Node
     [Export] public RPSTyping rpsTyping;
     [Export] public StatusCondition status;
     [Export] public string name;
-    public void Initialize(FighterData data)
+    public virtual void Initialize(FighterData data)
     {
         baseStats = new FighterStats
         {

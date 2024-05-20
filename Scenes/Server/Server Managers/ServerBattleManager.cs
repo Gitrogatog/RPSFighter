@@ -10,6 +10,8 @@ public partial class ServerBattleManager : Node
     BaseFighter[] p2Fighters;
     [Export] ServerTurnManager turnManager;
     PackedScene baseFighter;
+    public int p1ID;
+    public int p2ID;
     public override void _Ready()
     {
         baseFighter = GD.Load<PackedScene>("res://Scenes/Fighters/base_fighter.tscn");

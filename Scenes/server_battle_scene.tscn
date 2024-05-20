@@ -1,29 +1,25 @@
-[gd_scene load_steps=8 format=3 uid="uid://dt1dhmfv31be"]
+[gd_scene load_steps=7 format=3 uid="uid://dt1dhmfv31be"]
 
-[ext_resource type="Script" path="res://Scenes/Managers/ServerBattleManager.cs" id="1_g8li7"]
-[ext_resource type="Script" path="res://Scenes/Managers/ServerInputManager.cs" id="2_ibjqf"]
+[ext_resource type="Script" path="res://Scenes/Server/Server Managers/ServerBattleManager.cs" id="1_okubv"]
 [ext_resource type="Resource" uid="uid://d0h3u23gex3ou" path="res://Resources/Fighters/F1Data.tres" id="2_r5k6e"]
-[ext_resource type="Script" path="res://Scenes/Managers/ServerTurnManager.cs" id="2_t5ok6"]
-[ext_resource type="Script" path="res://Scenes/Managers/ServerLogManager.cs" id="3_cm484"]
-[ext_resource type="Resource" uid="uid://xk3ip3xldtqe" path="res://Resources/Fighters/F2Data.tres" id="3_kf7kb"]
+[ext_resource type="Script" path="res://Scenes/Server/Server Managers/ServerTurnManager.cs" id="2_rfb70"]
+[ext_resource type="Script" path="res://Scenes/Server/Server Managers/ServerInputManager.cs" id="3_6ro1o"]
 [ext_resource type="PackedScene" uid="uid://dpotj1s8yijjq" path="res://Scenes/UI/test_server_spinbox_controls.tscn" id="4_8uj8e"]
+[ext_resource type="Script" path="res://Scenes/Server/Server Managers/ServerLogManager.cs" id="4_b7da5"]
 
-[node name="ServerBattleScene" type="Node" node_paths=PackedStringArray("turnManager")]
-script = ExtResource("1_g8li7")
-p1FighterData = Array[Resource]([ExtResource("2_r5k6e"), ExtResource("3_kf7kb")])
-p2FighterData = Array[Resource]([ExtResource("2_r5k6e"), ExtResource("3_kf7kb")])
-turnManager = NodePath("Turn Manager")
+[node name="ServerBattleScene" type="Node"]
+script = ExtResource("1_okubv")
+p1FighterData = Array[Resource]([ExtResource("2_r5k6e"), null])
+p2FighterData = Array[Resource]([ExtResource("2_r5k6e"), null])
 
-[node name="Turn Manager" type="Node" parent="." node_paths=PackedStringArray("logManager")]
-script = ExtResource("2_t5ok6")
-logManager = NodePath("../Log Manager")
+[node name="Turn Manager" type="Node" parent="."]
+script = ExtResource("2_rfb70")
 
-[node name="Input Manager" type="Node" parent="." node_paths=PackedStringArray("battleManager")]
-script = ExtResource("2_ibjqf")
-battleManager = NodePath("../Turn Manager")
+[node name="Input Manager" type="Node" parent="."]
+script = ExtResource("3_6ro1o")
 
 [node name="Log Manager" type="Node" parent="."]
-script = ExtResource("3_cm484")
+script = ExtResource("4_b7da5")
 
 [node name="Fighters" type="Node" parent="."]
 

@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://cu8cycu6gd2kj"]
+
+[ext_resource type="Script" path="res://Scenes/Server/ServerGameLoop.cs" id="1_v5rad"]
+[ext_resource type="Script" path="res://Scenes/Server/WebSocketGroupServer.cs" id="2_bxkuq"]
+
+[node name="ServerGameLoop" type="Node"]
+script = ExtResource("1_v5rad")
+
+[node name="WBServer" type="Node" parent="."]
+script = ExtResource("2_bxkuq")
+supportedProtocols = PackedStringArray("demo-chat")

@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class WebSocketClient : Node2D
+public partial class WebSocketBattleClient : Node2D
 {
     [Signal] public delegate void ConnectedToServerEventHandler();
     [Signal] public delegate void ConnectionClosedEventHandler();

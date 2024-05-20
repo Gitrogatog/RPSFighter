@@ -2,7 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 
-public partial class WebSocketServer : Node2D
+public partial class WebSocketGroupServer : Node
 {
     // signals
     // signal message_received(peer_id: int, message)
@@ -79,7 +79,7 @@ public partial class WebSocketServer : Node2D
                 {
                     continue;
                 }
-                peers[id].SendText(message);
+                peers[id].SendText((string)message);
                 // if (type == Variant.Type.String)
                 // {
                 //     peers[id].SendText((string)message);

@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://bu7h67102n0k4"]
+
+[ext_resource type="Script" path="res://Scenes/Client/ClientGameLoop.cs" id="1_tyhji"]
+[ext_resource type="Script" path="res://Scenes/Client/WebSocketBattleClient.cs" id="2_a0fuv"]
+
+[node name="ClientGameLoop" type="Node"]
+script = ExtResource("1_tyhji")
+
+[node name="WSClient" type="Node" parent="."]
+script = ExtResource("2_a0fuv")
