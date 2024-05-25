@@ -8,6 +8,41 @@ public partial class ChatServer : Control
     [Export] RichTextLabel _logDest;
     [Export] LineEdit _lineEdit;
     [Export] SpinBox _port;
+    TeamJson defaultTeam;
+    [Export] public FighterDictionary fighterDictionary;
+    [Export] public ActionDictionary actionDictionary;
+    public static FighterDictionary globalFighterDictionary;
+    public static ActionDictionary globalActionDictionary;
+    public static PackedScene baseFighterPrefab;
+    public static PackedScene serverBattleInstancePrefab;
+
+    public override void _Ready()
+    {
+        globalFighterDictionary = fighterDictionary;
+        globalActionDictionary = actionDictionary;
+        baseFighterPrefab = GD.Load<PackedScene>("res://Scenes/Fighters/base_fighter.tscn");
+        serverBattleInstancePrefab = GD.Load<PackedScene>("res://Scenes/Server/server_battle_scene.tscn");
+        FighterJson[] fighterSet = new FighterJson[3];
+        fighterSet[0] = new FighterJson
+        {
+            Name = "rock man",
+            actionNames = new string[] { "rock punch", "paper punch", "scissor punch" }
+        };
+        fighterSet[1] = new FighterJson
+        {
+            Name = "paper man",
+            actionNames = new string[] { "paper punch", "scissor punch" }
+        };
+        fighterSet[2] = new FighterJson
+        {
+            Name = "scissor man",
+            actionNames = new string[] { "scissor punch", "scissor slice" }
+        };
+        defaultTeam = new TeamJson
+        {
+            fighters = fighterSet
+        };
+    }
 
     public void Info(string message)
     {
@@ -38,7 +73,7 @@ public partial class ChatServer : Control
         // }
         ProcessClientRequest(peerId, message);
         Info($"Server received data from peer {peerId}: {message}");
-        _server.Send(-peerId, $"{peerId} Says: {message}");
+        // _server.Send(-peerId, $"{peerId} Says: {message}");
     }
 
     void ProcessClientRequest(int peerID, string message)
@@ -58,6 +93,15 @@ public partial class ChatServer : Control
             case ClientToServerMessageType.ExitRoom:
                 ExitRoomRequest(peerID);
                 break;
+            case ClientToServerMessageType.TeamData:
+                GetTeamRequest(peerID, messageData.data);
+                break;
+            case ClientToServerMessageType.Action:
+                SelectAction(peerID, messageData.data.ToInt());
+                break;
+            case ClientToServerMessageType.Swap:
+                SelectSwap(peerID, messageData.data.ToInt());
+                break;
                 // case ClientToServerMessageType.:
                 //     break;
         }
@@ -65,6 +109,71 @@ public partial class ChatServer : Control
         // GD.Print($"received type: {parsed.VariantType}");
         // // GD.Print($"received as string: {parsed}");
         // GD.Print($"received contents: {parsed}");
+    }
+
+    ServerRoom GetPeerRoom(int peerID)
+    {
+        if (!ServerRoom.pIDToRoomID.ContainsKey(peerID))
+        {
+            SendMessage(peerID, ServerToClientMessageType.Error, "You're not in a room!");
+            return null;
+        }
+        return ServerRoom.roomIDTable[ServerRoom.pIDToRoomID[peerID]];
+    }
+
+    void SelectAction(int peerID, int actionID)
+    {
+        ServerRoom room = GetPeerRoom(peerID);
+        if (room == null) return;
+        // int actionID = actionData.ToInt();
+        room.SelectAction(peerID, actionID);
+    }
+    void SelectSwap(int peerID, int swapID)
+    {
+        ServerRoom room = GetPeerRoom(peerID);
+        if (room == null) return;
+        // int swapID = swapData.ToInt();
+        room.SelectAction(peerID, swapID);
+    }
+
+
+    void GetTeamRequest(int peerID, string teamData)
+    {
+        // if (!ServerRoom.pIDToRoomID.ContainsKey(peerID))
+        // {
+        //     SendMessage(peerID, ServerToClientMessageType.Error, "You're not in a room!");
+        //     return;
+        // }
+        // ServerRoom room = ServerRoom.roomIDTable[ServerRoom.pIDToRoomID[peerID]];
+        ServerRoom room = GetPeerRoom(peerID);
+        if (room == null) return;
+        // TeamJson teamJson = JsonSerializer.Deserialize<TeamJson>(teamData);
+        TeamJson teamJson = defaultTeam;
+        if (teamJson == null)
+        {
+            GD.PrintErr("Failed to read team data");
+            SendMessage(peerID, ServerToClientMessageType.Error, "Reading team data failed!");
+            return;
+        }
+        bool teamLoadSuccess = room.LoadTeam(peerID, teamJson);
+        if (!teamLoadSuccess)
+        {
+            SendMessage(peerID, ServerToClientMessageType.Error, "Could not verify team");
+            return;
+        }
+        SendMessage(peerID, ServerToClientMessageType.ConfirmTeam, "Team was accepted!");
+        if (room.ReadyForMatchStart)
+        {
+            room.StartMatch();
+            GD.Print($"Room {room.roomID} has begun its match");
+        }
+    }
+
+    void SendMatchState(ServerRoom room)
+    {
+        int p1ID = room.p1ID;
+        int p2ID = room.p2ID;
+        // SendMessage(, )
     }
 
     void CreateRoomRequest(int peerID)
@@ -75,8 +184,9 @@ public partial class ChatServer : Control
         }
         else
         {
-
-            ServerRoom room = ServerRoom.CreateRoom();
+            ServerBattleManager battleManager = serverBattleInstancePrefab.Instantiate<ServerBattleManager>();
+            AddChild(battleManager);
+            ServerRoom room = ServerRoom.CreateRoom(battleManager);
             room.AddPlayer(peerID);
             int roomID = room.roomID;
             GD.Print($"Adding player {peerID} to {roomID}");
@@ -154,3 +264,9 @@ public partial class ChatServer : Control
         _server.Send(peerID, JsonSerializer.Serialize(message));
     }
 }
+
+public struct MatchState
+{
+
+}
+

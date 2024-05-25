@@ -9,7 +9,7 @@ public partial class BaseFighter : Node
     [Export] public RPSTyping rpsTyping;
     [Export] public StatusCondition status;
     [Export] public string name;
-    public virtual void Initialize(FighterData data)
+    public virtual void Initialize(FighterData data, ActionData[] actionDatas)
     {
         baseStats = new FighterStats
         {
@@ -19,11 +19,11 @@ public partial class BaseFighter : Node
             speed = data.Speed
         };
         currentStats = baseStats;
-        int actionLength = data.actions.Length;
+        int actionLength = actionDatas.Length;
         actions = new ActionData[actionLength];
         for (int i = 0; i < actionLength; i++)
         {
-            actions[i] = data.actions[i];
+            actions[i] = actionDatas[i];
         }
         rpsTyping = data.fighterTyping;
         status = StatusCondition.Normal;

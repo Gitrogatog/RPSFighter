@@ -26,19 +26,19 @@ public class ServerRoom
         }
 
     }
-    public static ServerRoom CreateRoom()
+    public static ServerRoom CreateRoom(ServerBattleManager battleManager)
     {
         lastRoomID++;
-        ServerRoom room = new ServerRoom(lastRoomID);
+        ServerRoom room = new ServerRoom(lastRoomID, battleManager);
         roomIDTable.Add(lastRoomID, room);
         return room;
     }
-    public ServerRoom(int roomID)
+    public ServerRoom(int roomID, ServerBattleManager battleManager)
     {
+        battleInstance = battleManager;
         this.roomID = roomID;
         p1ID = -1;
         p2ID = -1;
-
     }
     public void CloseRoom()
     {
@@ -52,19 +52,107 @@ public class ServerRoom
             RemovePlayerFromRoom.Invoke(p2ID);
             pIDToRoomID.Remove(p2ID);
         }
+        battleInstance.QueueFree();
         roomIDTable.Remove(roomID);
 
     }
-
-    public bool LoadTeam(int playerID, string teamData)
+    public bool StartMatch()
     {
-        TeamJson teamJson = JsonSerializer.Deserialize<TeamJson>(teamData);
-        if (teamJson == null)
+        if (ReadyForMatchStart)
         {
-            GD.PrintErr("Failed to read team data");
-            return false;
+            battleInstance.StartBattle();
+            return true;
         }
-        return true;
+        return false;
+    }
+    public void SelectAction(int playerID, int actionIndex)
+    {
+        if (playerID == p1ID)
+        {
+            battleInstance.inputManager.RegisterAction(0, actionIndex);
+        }
+        else if (playerID == p2ID)
+        {
+            battleInstance.inputManager.RegisterAction(1, actionIndex);
+        }
+        else
+        {
+            GD.PrintErr($"player {playerID} is not in room!");
+        }
+    }
+    public void SelectSwap(int playerID, int swapIndex)
+    {
+        if (playerID == p1ID)
+        {
+            battleInstance.inputManager.RegisterSwap(0, swapIndex);
+        }
+        else if (playerID == p2ID)
+        {
+            battleInstance.inputManager.RegisterSwap(1, swapIndex);
+        }
+        else
+        {
+            GD.PrintErr($"player {playerID} is not in room!");
+        }
+    }
+
+    public bool LoadTeam(int playerID, TeamJson teamData)
+    {
+        if (p1ID == playerID)
+        {
+            p1Team = CreateTeamFromJson(teamData);
+            battleInstance.LoadPlayerTeam(0, p1Team);
+            return true;
+        }
+        else if (p2ID == playerID)
+        {
+            p2Team = CreateTeamFromJson(teamData);
+            battleInstance.LoadPlayerTeam(1, p2Team);
+            return true;
+        }
+        return false;
+    }
+    BaseFighter[] CreateTeamFromJson(TeamJson teamJson)
+    {
+        BaseFighter[] team = new BaseFighter[teamJson.fighters.Length];
+        for (int i = 0; i < team.Length; i++)
+        {
+            BaseFighter fighter = CreateFighterFromJson(teamJson.fighters[i]);
+            team[i] = fighter;
+        }
+        return team;
+    }
+    BaseFighter CreateFighterFromJson(FighterJson fighterJson)
+    {
+        GD.Print($"trying to load fighter with name {fighterJson.Name}");
+        FighterData data = ChatServer.globalFighterDictionary.NameToFighterData[fighterJson.Name];
+        if (data == null)
+        {
+            GD.PrintErr($"couldn't find FighterData with name {fighterJson.Name}");
+            return null;
+        }
+        ActionData[] actions = new ActionData[fighterJson.actionNames.Length];
+        for (int i = 0; i < actions.Length; i++)
+        {
+            actions[i] = LoadAction(fighterJson.actionNames[i]);
+        }
+        return LoadFighter(data, actions);
+    }
+    ActionData LoadAction(string actionName)
+    {
+        ActionData data = ChatServer.globalActionDictionary.NameToActionData[actionName];
+        if (data == null)
+        {
+            GD.PrintErr($"couldn't find ActionData with name {actionName}");
+            return null;
+        }
+        return data;
+    }
+    BaseFighter LoadFighter(FighterData data, ActionData[] actions)
+    {
+        BaseFighter fighterNode = ChatServer.baseFighterPrefab.Instantiate<BaseFighter>();
+        fighterNode.Initialize(data, actions);
+        return fighterNode;
     }
     public bool AddPlayer(int playerID)
     {

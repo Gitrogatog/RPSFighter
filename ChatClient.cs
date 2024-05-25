@@ -25,6 +25,7 @@ public partial class ChatClient : Control
     [Export] LineEdit _lineEdit;
     [Export] LineEdit _host;
     [Export] SpinBox _roomID;
+    [Export] SpinBox _actionID;
 
 
     public void Info(string message)
@@ -80,11 +81,32 @@ public partial class ChatClient : Control
         _client.Send(sendContent);
         _lineEdit.Text = "";
     }
+    void OnSelectActionButton()
+    {
+        int actionID = (int)_actionID.Value;
+        OnSelectAction(actionID);
+    }
     void OnSelectAction(int actionID)
     {
         Info($"Sending action with ID: {actionID}");
         // _client.Send($"!act{actionID}");
         SendMessage(ClientToServerMessageType.Action, actionID.ToString());
+    }
+    void OnSelectSwapButton()
+    {
+        int swapID = (int)_actionID.Value;
+        OnSelectSwap(swapID);
+    }
+    void OnSelectSwap(int swapID)
+    {
+        Info($"Sending swap with ID: {swapID}");
+        // _client.Send($"!act{actionID}");
+        SendMessage(ClientToServerMessageType.Swap, swapID.ToString());
+    }
+    void OnSendTeam()
+    {
+        Info("trying to start match");
+        SendMessage(ClientToServerMessageType.TeamData);
     }
 
     void OnCreateRoomPressed()
@@ -161,11 +183,11 @@ public struct ServerToClientMessage
 
 public enum ClientToServerMessageType
 {
-    JoinRoom, CreateRoom, ExitRoom, TeamData, Action, Alert
+    JoinRoom, CreateRoom, ExitRoom, TeamData, Action, Swap, Alert
 }
 public enum ServerToClientMessageType
 {
-    ConfirmJoin, ConfirmTeam, Error, StartMatch, TurnList, MatchResult, Alert
+    ConfirmJoin, ConfirmTeam, Error, StartMatch, TurnList, MatchResult, MatchState, Alert
 }
 // list of possible messages:
 // sent from client to server:

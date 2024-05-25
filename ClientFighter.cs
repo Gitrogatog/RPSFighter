@@ -4,9 +4,9 @@ using System;
 public partial class ClientFighter : BaseFighter
 {
     Sprite2D spriteNode;
-    public override void Initialize(FighterData data)
+    public override void Initialize(FighterData data, ActionData[] actionDatas)
     {
-        base.Initialize(data);
+        base.Initialize(data, actionDatas);
         spriteNode = GetNode<Sprite2D>("Sprite2D");
         spriteNode.Texture = data.sprite;
     }

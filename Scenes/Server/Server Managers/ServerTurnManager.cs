@@ -24,7 +24,7 @@ public partial class ServerTurnManager : Node
         currentTurn = 1;
         player1Team = new PlayerTeamInfo(p1Team);
         player2Team = new PlayerTeamInfo(p2Team);
-
+        GD.Print("TURN MANAGER WAS INITIALIZED!!!");
     }
     public void ReceiveTurnInput(int playerIndex, IAction action)
     {

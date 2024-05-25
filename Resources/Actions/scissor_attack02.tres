@@ -1,0 +1,11 @@
+[gd_resource type="Resource" load_steps=2 format=3 uid="uid://cf6jd52fwkbju"]
+
+[ext_resource type="Script" path="res://Resources/AttackActionData.cs" id="1_fjyix"]
+
+[resource]
+script = ExtResource("1_fjyix")
+Damage = 2
+Hits = 3
+typing = 2
+Name = "Scissor Slice"
+Priority = 0

@@ -36,7 +36,7 @@ public partial class ClientBattleManager : Node
     ClientFighter LoadFighter(FighterData data)
     {
         ClientFighter fighterNode = clientFighter.Instantiate<ClientFighter>();
-        fighterNode.Initialize(data);
+        fighterNode.Initialize(data, new ActionData[0]);
         AddChild(fighterNode);
         return fighterNode;
     }

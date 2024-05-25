@@ -1,29 +1,34 @@
 [gd_scene load_steps=7 format=3 uid="uid://dt1dhmfv31be"]
 
-[ext_resource type="Script" path="res://Scenes/Server/Server Managers/ServerBattleManager.cs" id="1_okubv"]
-[ext_resource type="Resource" uid="uid://d0h3u23gex3ou" path="res://Resources/Fighters/F1Data.tres" id="2_r5k6e"]
-[ext_resource type="Script" path="res://Scenes/Server/Server Managers/ServerTurnManager.cs" id="2_rfb70"]
-[ext_resource type="Script" path="res://Scenes/Server/Server Managers/ServerInputManager.cs" id="3_6ro1o"]
-[ext_resource type="PackedScene" uid="uid://dpotj1s8yijjq" path="res://Scenes/UI/test_server_spinbox_controls.tscn" id="4_8uj8e"]
-[ext_resource type="Script" path="res://Scenes/Server/Server Managers/ServerLogManager.cs" id="4_b7da5"]
+[ext_resource type="Script" path="res://Scenes/Server/Server Managers/ServerBattleManager.cs" id="1_fk8xq"]
+[ext_resource type="Resource" uid="uid://d0h3u23gex3ou" path="res://Resources/Fighters/rock_fighter01.tres" id="2_5q0sm"]
+[ext_resource type="Script" path="res://Scenes/Server/Server Managers/ServerTurnManager.cs" id="3_4qusj"]
+[ext_resource type="Script" path="res://Scenes/Server/Server Managers/ServerInputManager.cs" id="4_gvchq"]
+[ext_resource type="Script" path="res://Scenes/Server/Server Managers/ServerLogManager.cs" id="5_j7jdg"]
+[ext_resource type="PackedScene" uid="uid://dpotj1s8yijjq" path="res://Scenes/UI/test_server_spinbox_controls.tscn" id="6_tl0cl"]
 
-[node name="ServerBattleScene" type="Node"]
-script = ExtResource("1_okubv")
-p1FighterData = Array[Resource]([ExtResource("2_r5k6e"), null])
-p2FighterData = Array[Resource]([ExtResource("2_r5k6e"), null])
+[node name="ServerBattleScene" type="Node" node_paths=PackedStringArray("turnManager", "inputManager")]
+script = ExtResource("1_fk8xq")
+p1FighterData = Array[Resource]([ExtResource("2_5q0sm"), null])
+p2FighterData = Array[Resource]([ExtResource("2_5q0sm"), null])
+turnManager = NodePath("Turn Manager")
+inputManager = NodePath("Input Manager")
 
-[node name="Turn Manager" type="Node" parent="."]
-script = ExtResource("2_rfb70")
+[node name="Turn Manager" type="Node" parent="." node_paths=PackedStringArray("logManager")]
+script = ExtResource("3_4qusj")
+logManager = NodePath("../Log Manager")
 
-[node name="Input Manager" type="Node" parent="."]
-script = ExtResource("3_6ro1o")
+[node name="Input Manager" type="Node" parent="." node_paths=PackedStringArray("battleManager")]
+script = ExtResource("4_gvchq")
+battleManager = NodePath("../Turn Manager")
 
 [node name="Log Manager" type="Node" parent="."]
-script = ExtResource("4_b7da5")
+script = ExtResource("5_j7jdg")
 
 [node name="Fighters" type="Node" parent="."]
 
 [node name="Control" type="Control" parent="."]
+visible = false
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
@@ -36,7 +41,7 @@ offset_top = -10.0
 offset_right = 501.0
 offset_bottom = 151.0
 
-[node name="P1 Controls" parent="Control/Panel" node_paths=PackedStringArray("inputManager") instance=ExtResource("4_8uj8e")]
+[node name="P1 Controls" parent="Control/Panel" node_paths=PackedStringArray("inputManager") instance=ExtResource("6_tl0cl")]
 inputManager = NodePath("../../../Input Manager")
 
 [node name="Swap" parent="Control/Panel/P1 Controls" index="2"]
@@ -45,7 +50,7 @@ offset_top = 48.0
 offset_right = 140.0
 offset_bottom = 79.0
 
-[node name="P1 Controls2" parent="Control/Panel" node_paths=PackedStringArray("inputManager") instance=ExtResource("4_8uj8e")]
+[node name="P1 Controls2" parent="Control/Panel" node_paths=PackedStringArray("inputManager") instance=ExtResource("6_tl0cl")]
 offset_left = 284.0
 offset_top = 3.0
 offset_right = 324.0

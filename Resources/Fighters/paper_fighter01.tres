@@ -1,0 +1,15 @@
+[gd_resource type="Resource" load_steps=4 format=3 uid="uid://xk3ip3xldtqe"]
+
+[ext_resource type="Resource" uid="uid://bnkgss5xt7tin" path="res://Resources/Actions/scissor_attack01.tres" id="1_yf04s"]
+[ext_resource type="Resource" uid="uid://qb5opjs1qtwo" path="res://Resources/Actions/paper_attack01.tres" id="2_y5mly"]
+[ext_resource type="Script" path="res://Resources/FighterData.cs" id="3_0dllk"]
+
+[resource]
+script = ExtResource("3_0dllk")
+Health = 30
+Attack = 1
+Defense = -1
+Speed = 2
+fighterTyping = 1
+actions = Array[Resource]([ExtResource("1_yf04s"), ExtResource("2_y5mly")])
+Name = "paper guy"

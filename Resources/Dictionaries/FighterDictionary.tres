@@ -1,0 +1,14 @@
+[gd_resource type="Resource" load_steps=5 format=3 uid="uid://m17sx6dvghth"]
+
+[ext_resource type="Script" path="res://Resources/FighterDictionary.cs" id="1_anm34"]
+[ext_resource type="Resource" uid="uid://d0h3u23gex3ou" path="res://Resources/Fighters/rock_fighter01.tres" id="1_g3yu7"]
+[ext_resource type="Resource" uid="uid://xk3ip3xldtqe" path="res://Resources/Fighters/paper_fighter01.tres" id="2_b2n6s"]
+[ext_resource type="Resource" uid="uid://cfqys7lkbmlib" path="res://Resources/Fighters/scissor_fighter01.tres" id="3_jpufa"]
+
+[resource]
+script = ExtResource("1_anm34")
+NameToFighterData = {
+"paper man": ExtResource("2_b2n6s"),
+"rock man": ExtResource("1_g3yu7"),
+"scissor man": ExtResource("3_jpufa")
+}

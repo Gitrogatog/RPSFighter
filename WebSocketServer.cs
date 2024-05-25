@@ -152,7 +152,7 @@ public partial class WebSocketServer : Node2D
     {
         if (!tcpServer.IsListening())
         {
-            GD.Print("tcp isn't listening!");
+            // GD.Print("tcp isn't listening!");
             return;
         }
         while (tcpServer.IsConnectionAvailable()) //!RefuseNewConnections && tcpServer.IsConnectionAvailable()

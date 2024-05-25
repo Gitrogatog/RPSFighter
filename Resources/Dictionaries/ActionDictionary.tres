@@ -1,0 +1,16 @@
+[gd_resource type="Resource" load_steps=6 format=3 uid="uid://b2d1wv48kq32p"]
+
+[ext_resource type="Script" path="res://Resources/ActionDictionary.cs" id="1_c838l"]
+[ext_resource type="Resource" uid="uid://xlqx73av0ggq" path="res://Resources/Actions/rock_attack01.tres" id="1_mkiey"]
+[ext_resource type="Resource" uid="uid://bnkgss5xt7tin" path="res://Resources/Actions/scissor_attack01.tres" id="2_su3q8"]
+[ext_resource type="Resource" uid="uid://qb5opjs1qtwo" path="res://Resources/Actions/paper_attack01.tres" id="3_gspdx"]
+[ext_resource type="Resource" uid="uid://cf6jd52fwkbju" path="res://Resources/Actions/scissor_attack02.tres" id="4_hulie"]
+
+[resource]
+script = ExtResource("1_c838l")
+NameToActionData = {
+"paper punch": ExtResource("3_gspdx"),
+"rock punch": ExtResource("1_mkiey"),
+"scissor punch": ExtResource("2_su3q8"),
+"scissor slice": ExtResource("4_hulie")
+}

@@ -43,9 +43,15 @@ public partial class ServerInputManager : Node
         {
             player2Action = action;
         }
+        if (player1Action != null && player2Action != null)
+        {
+            SendTurnsToBattleManager();
+        }
     }
     void SendTurnsToBattleManager()
     {
         battleManager.RunTurn(player1Action, player2Action);
+        player1Action = null;
+        player2Action = null;
     }
 }

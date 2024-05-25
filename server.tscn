@@ -1,8 +1,10 @@
-[gd_scene load_steps=4 format=3 uid="uid://cgkdckgj4ljnl"]
+[gd_scene load_steps=6 format=3 uid="uid://cgkdckgj4ljnl"]
 
 [ext_resource type="PackedScene" uid="uid://xvhh2xbl4dvf" path="res://chat.tscn" id="1_g74nb"]
 [ext_resource type="Script" path="res://WebSocketServer.cs" id="2_tmq2h"]
 [ext_resource type="Script" path="res://ChatServer.cs" id="2_x1mrr"]
+[ext_resource type="Resource" uid="uid://m17sx6dvghth" path="res://Resources/Dictionaries/FighterDictionary.tres" id="3_jeu8q"]
+[ext_resource type="Resource" uid="uid://b2d1wv48kq32p" path="res://Resources/Dictionaries/ActionDictionary.tres" id="4_sfdo6"]
 
 [node name="Server" node_paths=PackedStringArray("_server", "_logDest", "_lineEdit", "_port") instance=ExtResource("1_g74nb")]
 anchors_preset = 15
@@ -19,6 +21,8 @@ _server = NodePath("WebSocketServer")
 _logDest = NodePath("Panel/VBoxContainer/RichTextLabel")
 _lineEdit = NodePath("Panel/VBoxContainer/Send/LineEdit")
 _port = NodePath("Panel/VBoxContainer/Connect/Port")
+fighterDictionary = ExtResource("3_jeu8q")
+actionDictionary = ExtResource("4_sfdo6")
 
 [node name="WebSocketServer" type="Node2D" parent="." index="0"]
 script = ExtResource("2_tmq2h")

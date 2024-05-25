@@ -4,7 +4,7 @@
 [ext_resource type="Script" path="res://ChatClient.cs" id="2_lt00d"]
 [ext_resource type="Script" path="res://WebSocketClient.cs" id="3_d7anu"]
 
-[node name="Client" node_paths=PackedStringArray("_client", "_logDest", "_lineEdit", "_host", "_roomID") instance=ExtResource("1_8facw")]
+[node name="Client" node_paths=PackedStringArray("_client", "_logDest", "_lineEdit", "_host", "_roomID", "_actionID") instance=ExtResource("1_8facw")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -20,6 +20,7 @@ _logDest = NodePath("Panel/VBoxContainer/RichTextLabel")
 _lineEdit = NodePath("Panel/VBoxContainer/Send/LineEdit")
 _host = NodePath("Panel/VBoxContainer/Connect/Host")
 _roomID = NodePath("Panel/VBoxContainer/Room/RoomID")
+_actionID = NodePath("Panel/VBoxContainer/Battle/ActionID")
 
 [node name="WebSocketClient" type="Node2D" parent="." index="0"]
 script = ExtResource("3_d7anu")
@@ -74,20 +75,25 @@ min_value = 1.0
 max_value = 65535.0
 value = 2.0
 
-[node name="RPS" type="HBoxContainer" parent="Panel/VBoxContainer" index="4"]
+[node name="Battle" type="HBoxContainer" parent="Panel/VBoxContainer" index="4"]
 layout_mode = 2
 
-[node name="Rock" type="Button" parent="Panel/VBoxContainer/RPS" index="0"]
+[node name="SendTeam" type="Button" parent="Panel/VBoxContainer/Battle" index="0"]
 layout_mode = 2
-text = "Rock"
+text = "Team"
 
-[node name="Paper" type="Button" parent="Panel/VBoxContainer/RPS" index="1"]
+[node name="Action" type="Button" parent="Panel/VBoxContainer/Battle" index="1"]
 layout_mode = 2
-text = "Paper"
+text = "Action"
 
-[node name="Scissors" type="Button" parent="Panel/VBoxContainer/RPS" index="2"]
+[node name="Swap" type="Button" parent="Panel/VBoxContainer/Battle" index="2"]
 layout_mode = 2
-text = "Scissors"
+text = "Swap"
+
+[node name="ActionID" type="SpinBox" parent="Panel/VBoxContainer/Battle" index="3"]
+layout_mode = 2
+min_value = -5.0
+max_value = 10.0
 
 [connection signal="ConnectedToServer" from="WebSocketClient" to="." method="OnWebSocketClientConnectedToServer"]
 [connection signal="ConnectionClosed" from="WebSocketClient" to="." method="OnWebSocketClientConnectionClosed"]
@@ -97,6 +103,6 @@ text = "Scissors"
 [connection signal="pressed" from="Panel/VBoxContainer/Room/CreateRoom" to="." method="OnCreateRoomPressed"]
 [connection signal="pressed" from="Panel/VBoxContainer/Room/JoinRoom" to="." method="OnJoinRoomPressed"]
 [connection signal="pressed" from="Panel/VBoxContainer/Room/ExitRoom" to="." method="OnExitRoomPressed"]
-[connection signal="pressed" from="Panel/VBoxContainer/RPS/Rock" to="." method="OnSendPressed"]
-[connection signal="pressed" from="Panel/VBoxContainer/RPS/Paper" to="." method="OnSendPressed"]
-[connection signal="pressed" from="Panel/VBoxContainer/RPS/Scissors" to="." method="OnSendPressed"]
+[connection signal="pressed" from="Panel/VBoxContainer/Battle/SendTeam" to="." method="OnSendTeam"]
+[connection signal="pressed" from="Panel/VBoxContainer/Battle/Action" to="." method="OnSelectActionButton"]
+[connection signal="pressed" from="Panel/VBoxContainer/Battle/Swap" to="." method="OnSelectSwapButton"]

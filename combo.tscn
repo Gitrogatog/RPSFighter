@@ -28,6 +28,3 @@ layout_mode = 2
 
 [node name="Client2" parent="HBoxContainer/VBoxContainer" instance=ExtResource("2_ds8ig")]
 layout_mode = 2
-
-[node name="Client3" parent="HBoxContainer/VBoxContainer" instance=ExtResource("2_ds8ig")]
-layout_mode = 2

@@ -7,5 +7,5 @@ public class FighterJson
 
 public class TeamJson
 {
-    FighterJson[] fighters;
+    public FighterJson[] fighters;
 }
