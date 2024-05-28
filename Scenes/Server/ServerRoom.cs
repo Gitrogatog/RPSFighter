@@ -39,6 +39,8 @@ public class ServerRoom
         this.roomID = roomID;
         p1ID = -1;
         p2ID = -1;
+        battleInstance.turnManager.TurnEndEvent += EndOfTurn;
+        battleInstance.turnManager.DeathSwapEvent += DeathSwap;
     }
     public void CloseRoom()
     {
@@ -189,5 +191,13 @@ public class ServerRoom
             return true;
         }
         return false;
+    }
+    public void EndOfTurn()
+    {
+        serverHead.ReportEndOfTurn(this);
+    }
+    public void DeathSwap(bool player1Swap, bool player2Swap)
+    {
+        serverHead.ReportDeathSwap(this, player1Swap, player2Swap);
     }
 }

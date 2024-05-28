@@ -50,7 +50,7 @@ public partial class ServerInputManager : Node
     }
     void SendTurnsToBattleManager()
     {
-        battleManager.RunTurn(player1Action, player2Action);
+        battleManager.RunActions(player1Action, player2Action);
         player1Action = null;
         player2Action = null;
     }

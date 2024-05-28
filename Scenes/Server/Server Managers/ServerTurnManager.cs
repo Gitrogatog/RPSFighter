@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 
 public partial class ServerTurnManager : Node
 {
@@ -10,8 +11,11 @@ public partial class ServerTurnManager : Node
     IAction[] actionQueue = new IAction[2];
     IAction p1Action;
     IAction p2Action;
-    bool expectingEndOfTurnSwap = false;
+    public bool expectingEndOfTurnSwap = false;
     int currentTurn = 0;
+    public static event Action<int, int> AddPlayerToRoom = delegate { };
+    public event Action TurnEndEvent = delegate { };
+    public event Action<bool, bool> DeathSwapEvent = delegate { };
 
 
     // public void AddTurn(int playerIndex, IAction action)
@@ -26,13 +30,25 @@ public partial class ServerTurnManager : Node
         player2Team = new PlayerTeamInfo(p2Team);
         GD.Print("TURN MANAGER WAS INITIALIZED!!!");
     }
-    public void ReceiveTurnInput(int playerIndex, IAction action)
+    // public void ReceiveTurnInput(int playerIndex, IAction action)
+    // {
+
+    // }
+    public void RunActions(IAction player1Action, IAction player2Action)
     {
+        if (!expectingEndOfTurnSwap)
+        {
+            RunTurn(player1Action, player2Action);
+        }
+        else
+        {
+            RunEndSwaps(player1Action, player2Action);
+        }
+        CheckTurnFinish();
 
     }
-    public void RunTurn(IAction player1Action, IAction player2Action)
+    void RunTurn(IAction player1Action, IAction player2Action)
     {
-
         DecideTurnOrder(player1Action, player2Action);
         RunStartTurnEffects();
         if (actionQueue[0].Priority >= actionQueue[1].Priority)
@@ -45,26 +61,34 @@ public partial class ServerTurnManager : Node
             actionQueue[1].UseAction(1, this);
             actionQueue[0].UseAction(0, this);
         }
-
+        actionQueue[0] = null;
+        actionQueue[1] = null;
         RunEndOfTurnEffects();
-        // if (player1Team.activeFighterIndex == -1)
-        // {
-        //     // expect swap input
-        //     expectingEndOfTurnSwap = true;
-        // }
-        // if (player2Team.activeFighterIndex == -1)
-        // {
-        //     // expect swap input 
-        //     expectingEndOfTurnSwap = true;
-        // }
-        // // await
-        // if (!expectingEndOfTurnSwap)
-        // {
-
-        // }
-        EndTurn();
     }
+    void RunEndSwaps(IAction player1Action, IAction player2Action)
+    {
+        player1Action.UseAction(0, this);
+        player2Action.UseAction(1, this);
 
+    }
+    void CheckTurnFinish()
+    {
+        if (player1Team.activeFighterIndex == -1 || player2Team.activeFighterIndex == -1)
+        {
+            // expect swap input
+            expectingEndOfTurnSwap = true;
+            DeathSwapEvent.Invoke(player1Team.activeFighterIndex == -1, player2Team.activeFighterIndex == -1);
+        }
+        else
+        {
+            EndTurn();
+        }
+
+    }
+    void SendBattleStateBackToPlayers()
+    {
+
+    }
     void RunStartTurnEffects()
     {
         GD.Print("Start turn effects!");
@@ -76,9 +100,9 @@ public partial class ServerTurnManager : Node
     }
     void EndTurn()
     {
-        actionQueue[0] = null;
-        actionQueue[1] = null;
+        expectingEndOfTurnSwap = false;
         currentTurn++;
+        TurnEndEvent.Invoke();
     }
 
     public void PrintBattleState()
@@ -123,6 +147,11 @@ public partial class ServerTurnManager : Node
         // }
     }
 
+    public void UseAction(int userTeam, int actionIndex, string actionID)
+    {
+        logManager.RegisterAction(userTeam, actionIndex, actionID);
+    }
+
     public void Swap(int userTeam, int swapToIndex)
     {
 
@@ -130,7 +159,8 @@ public partial class ServerTurnManager : Node
         GD.Print($"P{userTeam} is swapping from {team.activeFighterIndex} to {swapToIndex}");
         if (team.activeFighterIndex != swapToIndex)
         {
-            logManager.RegisterSwap(userTeam, swapToIndex);
+            BaseFighter baseFighter = team.team[swapToIndex];
+            logManager.RegisterSwap(userTeam, swapToIndex, baseFighter.name);
             team.activeFighterIndex = swapToIndex;
         }
     }

@@ -136,6 +136,15 @@ public partial class ChatServer : Control
         room.SelectAction(peerID, swapID);
     }
 
+    public void ReportEndOfTurn(ServerRoom room)
+    {
+        SendMatchState(room);
+    }
+    public void ReportDeathSwap(ServerRoom room, bool p1Swap, bool p2Swap)
+    {
+        SendMatchState(room);
+        // SendMessage
+    }
 
     void GetTeamRequest(int peerID, string teamData)
     {
