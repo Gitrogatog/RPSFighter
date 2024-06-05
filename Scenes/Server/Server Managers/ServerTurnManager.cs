@@ -147,9 +147,9 @@ public partial class ServerTurnManager : Node
         // }
     }
 
-    public void UseAction(int userTeam, int actionIndex, string actionID)
+    public void UseAction(int userTeam, string actionID)
     {
-        logManager.RegisterAction(userTeam, actionIndex, actionID);
+        logManager.RegisterAction(userTeam, actionID);
     }
 
     public void Swap(int userTeam, int swapToIndex)

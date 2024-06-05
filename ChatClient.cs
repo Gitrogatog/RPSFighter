@@ -26,6 +26,8 @@ public partial class ChatClient : Control
     [Export] LineEdit _host;
     [Export] SpinBox _roomID;
     [Export] SpinBox _actionID;
+    [Export] ClientBattleUI clientBattleUI;
+    int clientID;
 
 
     public void Info(string message)
@@ -65,7 +67,59 @@ public partial class ChatClient : Control
                 break;
             case ServerToClientMessageType.ConfirmTeam:
                 break;
+            case ServerToClientMessageType.StartMatch:
+                LoadGameUI();
+                break;
+            case ServerToClientMessageType.BattleLog:
+                BattleLogMessage battleLogMessage = JsonSerializer.Deserialize<BattleLogMessage>(messageData.data);
+                RunLogEffects(battleLogMessage.logs);
+                ActionResponseUI(battleLogMessage.response);
+                break;
+
         }
+    }
+
+    void RunLogEffects(BattleLogElement[] logs)
+    {
+        for (int i = 0; i < logs.Length; i++)
+        {
+            BattleLogElement log = logs[i];
+            switch (log.type)
+            { //Action, Swap, Damage, Death, StartTurn, EndTurn
+                case BattleLogType.Action:
+                    ActionLog actionLog = JsonSerializer.Deserialize<ActionLog>(log.data);
+                    clientBattleUI.RunAction(actionLog.team == clientID, actionLog.actionID);
+                    break;
+                case BattleLogType.Swap:
+                    SwapLog swapLog = JsonSerializer.Deserialize<SwapLog>(log.data);
+                    clientBattleUI.RunSwap(swapLog.team == clientID, swapLog.swapToIndex, swapLog.fighterID);
+                    break;
+                case BattleLogType.Damage:
+                    DamageLog damageLog = JsonSerializer.Deserialize<DamageLog>(log.data);
+                    clientBattleUI.RunDamage(damageLog.team == clientID, damageLog.damage);
+                    break;
+                case BattleLogType.Death:
+                    int team = log.data.ToInt();
+                    clientBattleUI.RunDeath(clientID == team);
+                    break;
+                case BattleLogType.StartTurn:
+                    clientBattleUI.RunStartTurn();
+                    break;
+                case BattleLogType.EndTurn:
+                    clientBattleUI.RunEndTurn();
+                    break;
+            }
+        }
+    }
+
+    void ActionResponseUI(ExpectedActionResponse response)
+    {
+        clientBattleUI.SetExpectedResponse(response);
+    }
+
+    void LoadGameUI()
+    {
+
     }
 
     // UI Signals
@@ -187,7 +241,7 @@ public enum ClientToServerMessageType
 }
 public enum ServerToClientMessageType
 {
-    ConfirmJoin, ConfirmTeam, Error, StartMatch, TurnList, MatchResult, MatchState, Alert
+    ConfirmJoin, ConfirmTeam, Error, StartMatch, BattleLog, MatchResult, MatchState, Alert
 }
 // list of possible messages:
 // sent from client to server:

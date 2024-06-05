@@ -10,9 +10,9 @@ public partial class ServerLogManager : Node
     {
         AddLog(BattleLogType.StartTurn);
     }
-    public void RegisterAction(int team, int actionIndex, string actionID)
+    public void RegisterAction(int team, string actionID)
     {
-        ActionLog log = new ActionLog(team, actionIndex, actionID);
+        ActionLog log = new ActionLog(team, actionID);
         string json = JsonSerializer.Serialize(log);
         AddLog(BattleLogType.Action, json);
     }

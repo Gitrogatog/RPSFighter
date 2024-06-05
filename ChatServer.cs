@@ -126,24 +126,39 @@ public partial class ChatServer : Control
         ServerRoom room = GetPeerRoom(peerID);
         if (room == null) return;
         // int actionID = actionData.ToInt();
-        room.SelectAction(peerID, actionID);
+        if (!room.SelectAction(peerID, actionID))
+        {
+            SendMessage(peerID, ServerToClientMessageType.Error, "action input failed!");
+        }
     }
     void SelectSwap(int peerID, int swapID)
     {
         ServerRoom room = GetPeerRoom(peerID);
         if (room == null) return;
         // int swapID = swapData.ToInt();
-        room.SelectAction(peerID, swapID);
+        if (!room.SelectAction(peerID, swapID))
+        {
+            SendMessage(peerID, ServerToClientMessageType.Error, "swap input failed!");
+        }
     }
 
     public void ReportEndOfTurn(ServerRoom room)
     {
-        SendMatchState(room);
+        var logs = room.battleInstance.logManager.GetLog();
+        BattleLogMessage logMessage = new BattleLogMessage(ExpectedActionResponse.Any, logs);
+        string messageJson = JsonSerializer.Serialize(logMessage);
+        SendMessage(room.p1ID, ServerToClientMessageType.MatchState, messageJson);
+        SendMessage(room.p2ID, ServerToClientMessageType.MatchState, messageJson);
     }
     public void ReportDeathSwap(ServerRoom room, bool p1Swap, bool p2Swap)
     {
-        SendMatchState(room);
-        // SendMessage
+        var logs = room.battleInstance.logManager.GetLog();
+        BattleLogMessage p1LogMessage = new BattleLogMessage(p1Swap ? ExpectedActionResponse.Swap : ExpectedActionResponse.None, logs);
+        BattleLogMessage p2LogMessage = new BattleLogMessage(p2Swap ? ExpectedActionResponse.Swap : ExpectedActionResponse.None, logs);
+        string p1MessageJson = JsonSerializer.Serialize(p1LogMessage);
+        string p2MessageJson = JsonSerializer.Serialize(p2LogMessage);
+        SendMessage(room.p1ID, ServerToClientMessageType.MatchState, p1MessageJson);
+        SendMessage(room.p2ID, ServerToClientMessageType.MatchState, p2MessageJson);
     }
 
     void GetTeamRequest(int peerID, string teamData)

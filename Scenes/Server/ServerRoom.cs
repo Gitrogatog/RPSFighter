@@ -67,35 +67,38 @@ public class ServerRoom
         }
         return false;
     }
-    public void SelectAction(int playerID, int actionIndex)
+    public bool SelectAction(int playerID, int actionIndex)
     {
         if (playerID == p1ID)
         {
-            battleInstance.inputManager.RegisterAction(0, actionIndex);
+            return battleInstance.inputManager.RegisterAction(0, actionIndex);
+
         }
         else if (playerID == p2ID)
         {
-            battleInstance.inputManager.RegisterAction(1, actionIndex);
+            return battleInstance.inputManager.RegisterAction(1, actionIndex);
         }
         else
         {
             GD.PrintErr($"player {playerID} is not in room!");
         }
+        return false;
     }
-    public void SelectSwap(int playerID, int swapIndex)
+    public bool SelectSwap(int playerID, int swapIndex)
     {
         if (playerID == p1ID)
         {
-            battleInstance.inputManager.RegisterSwap(0, swapIndex);
+            return battleInstance.inputManager.RegisterSwap(0, swapIndex);
         }
         else if (playerID == p2ID)
         {
-            battleInstance.inputManager.RegisterSwap(1, swapIndex);
+            return battleInstance.inputManager.RegisterSwap(1, swapIndex);
         }
         else
         {
             GD.PrintErr($"player {playerID} is not in room!");
         }
+        return false;
     }
 
     public bool LoadTeam(int playerID, TeamJson teamData)

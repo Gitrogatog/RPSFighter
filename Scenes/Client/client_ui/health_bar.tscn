@@ -1,0 +1,26 @@
+[gd_scene load_steps=2 format=3 uid="uid://4dh7xhhayksj"]
+
+[ext_resource type="Script" path="res://Scenes/Client/client_ui/HealthBar.cs" id="1_vi5i1"]
+
+[node name="HealthBar" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_vi5i1")
+
+[node name="Backfill" type="ColorRect" parent="."]
+layout_mode = 0
+offset_right = 357.0
+offset_bottom = 40.0
+
+[node name="Health" type="ColorRect" parent="."]
+layout_mode = 0
+offset_right = 357.0
+offset_bottom = 40.0
+color = Color(1, 0, 1, 1)
+
+[node name="HealthText" type="RichTextLabel" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0

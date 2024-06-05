@@ -8,7 +8,7 @@ public partial class ActionData : Resource, IAction
 
     public virtual void UseAction(int playerIndex, ServerTurnManager turnManager)
     {
-
+        turnManager.UseAction(playerIndex, Name);
     }
     public ActionData()
     {
@@ -20,6 +20,16 @@ public interface IAction
 {
     public int Priority { get; }
     public void UseAction(int playerIndex, ServerTurnManager turnManager);
+}
+
+public class BlankAction : IAction
+{
+    public static BlankAction blank = new BlankAction();
+    public int Priority { get; set; } = 0;
+    public void UseAction(int playerIndex, ServerTurnManager turnManager)
+    {
+        //does nothing
+    }
 }
 
 public class SwapAction : IAction

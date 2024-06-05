@@ -9,8 +9,10 @@ public partial class BaseFighter : Node
     [Export] public RPSTyping rpsTyping;
     [Export] public StatusCondition status;
     [Export] public string name;
+    public FighterData Data;
     public virtual void Initialize(FighterData data, ActionData[] actionDatas)
     {
+        Data = data;
         baseStats = new FighterStats
         {
             health = data.Health,
@@ -28,6 +30,7 @@ public partial class BaseFighter : Node
         rpsTyping = data.fighterTyping;
         status = StatusCondition.Normal;
         name = data.Name;
+
         // spriteNode = GetNodeOrNull<Sprite2D>("Sprite2D");
         // if (spriteNode != null)
         // {

@@ -7,8 +7,19 @@ public partial class ServerInputManager : Node
     [Export] ServerTurnManager battleManager;
     IAction player1Action;
     IAction player2Action;
+    bool waitingToReset = false;
+    ExpectedActionResponse p1Input = ExpectedActionResponse.Any;
+    ExpectedActionResponse p2Input = ExpectedActionResponse.Any;
+    public override void _Ready()
+    {
+        battleManager.DeathSwapEvent += OnDeathSwap;
+        battleManager.TurnEndEvent += OnTurnEnd;
+    }
+
     public bool RegisterAction(int playerIndex, int actionIndex)
     {
+        if (p1Input != ExpectedActionResponse.Any && playerIndex == 0) return false;
+        if (p2Input != ExpectedActionResponse.Any && playerIndex == 1) return false;
         BaseFighter fighter = battleManager.GetActiveFighter(playerIndex);
         if (fighter == null) return false;
         if (actionIndex < 0 || actionIndex >= fighter.actions.Length)
@@ -21,10 +32,31 @@ public partial class ServerInputManager : Node
     }
     public bool RegisterSwap(int playerIndex, int swapIndex)
     {
+        if (p1Input == ExpectedActionResponse.None && playerIndex == 0) return false;
+        if (p2Input == ExpectedActionResponse.None && playerIndex == 1) return false;
         if (!battleManager.IsSwapIndexValid(playerIndex, swapIndex)) return false;
         // battleManager.AddTurn(playerIndex, new SwapAction(swapIndex));
         SetHeldTurn(playerIndex, new SwapAction(swapIndex));
         return true;
+    }
+    void OnTurnEnd()
+    {
+        p1Input = ExpectedActionResponse.Any;
+        p2Input = ExpectedActionResponse.Any;
+        player1Action = null;
+        player2Action = null;
+    }
+    void OnDeathSwap(bool p1Dead, bool p2Dead)
+    {
+        // waitingToReset = false;
+        p1Input = p1Dead ? ExpectedActionResponse.Swap : ExpectedActionResponse.None;
+        p2Input = p2Dead ? ExpectedActionResponse.Swap : ExpectedActionResponse.None; ;
+        player1Action = p1Dead ? null : BlankAction.blank;
+        player2Action = p2Dead ? null : BlankAction.blank;
+        if (!p1Dead && !p2Dead)
+        {
+            GD.PushError("server input manager found both players alive on death swap!");
+        }
     }
     // void RegisterSelectedAction(int playerIndex, IAction action)
     // {
@@ -55,3 +87,4 @@ public partial class ServerInputManager : Node
         player2Action = null;
     }
 }
+

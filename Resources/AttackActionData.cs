@@ -8,6 +8,7 @@ public partial class AttackActionData : ActionData
     [Export] RPSTyping typing;
     public override void UseAction(int playerIndex, ServerTurnManager turnManager)
     {
+        base.UseAction(playerIndex, turnManager);
         turnManager.DealDamage(1 - playerIndex, Damage, Hits, typing);
     }
     public AttackActionData()

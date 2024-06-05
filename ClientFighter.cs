@@ -4,6 +4,7 @@ using System;
 public partial class ClientFighter : BaseFighter
 {
     Sprite2D spriteNode;
+    public bool fighterRevealed = false;
     public override void Initialize(FighterData data, ActionData[] actionDatas)
     {
         base.Initialize(data, actionDatas);

@@ -1,0 +1,27 @@
+[gd_scene load_steps=2 format=3 uid="uid://beofsqkjyrsiq"]
+
+[ext_resource type="Script" path="res://Scenes/Client/client_ui/FighterIcon.cs" id="1_m2ns5"]
+
+[node name="FighterIcon" type="Control"]
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_m2ns5")
+
+[node name="FighterSprite" type="TextureRect" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="HealthLabel" type="RichTextLabel" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Button" type="Button" parent="."]
+custom_minimum_size = Vector2(50, 50)
+layout_mode = 0
+offset_right = 8.0
+offset_bottom = 8.0

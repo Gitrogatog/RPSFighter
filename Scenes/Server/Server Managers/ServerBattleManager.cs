@@ -10,6 +10,7 @@ public partial class ServerBattleManager : Node
     BaseFighter[] p2Fighters;
     [Export] public ServerTurnManager turnManager;
     [Export] public ServerInputManager inputManager;
+    [Export] public ServerLogManager logManager;
     PackedScene baseFighter;
     public int p1ID;
     public int p2ID;

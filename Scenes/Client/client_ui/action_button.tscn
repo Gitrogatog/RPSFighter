@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://b5bfhkbfgm37v"]
+
+[ext_resource type="Script" path="res://Scenes/Client/client_ui/ActionButton.cs" id="1_bmeea"]
+
+[node name="ActionButton" type="Button"]
+text = "Action 0"
+script = ExtResource("1_bmeea")

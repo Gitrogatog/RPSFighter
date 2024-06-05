@@ -1,0 +1,93 @@
+[gd_scene load_steps=6 format=3 uid="uid://cpamntn5ic7ro"]
+
+[ext_resource type="PackedScene" uid="uid://4dh7xhhayksj" path="res://Scenes/Client/client_ui/health_bar.tscn" id="1_jusw1"]
+[ext_resource type="Script" path="res://Scenes/Client/client_ui/ClientBattleUI.cs" id="1_upkf1"]
+[ext_resource type="PackedScene" uid="uid://beofsqkjyrsiq" path="res://Scenes/Client/client_ui/fighter_icon.tscn" id="2_jp8cw"]
+[ext_resource type="Script" path="res://Scenes/Client/client_ui/ActionButtonController.cs" id="3_pg458"]
+[ext_resource type="PackedScene" uid="uid://b5bfhkbfgm37v" path="res://Scenes/Client/client_ui/action_button.tscn" id="4_ungnv"]
+
+[node name="ClientBattleUI" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_upkf1")
+
+[node name="Player" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="PlayerHealthBar" parent="Player" instance=ExtResource("1_jusw1")]
+offset_left = 66.0
+offset_top = 27.0
+offset_right = 66.0
+offset_bottom = 27.0
+
+[node name="Health" parent="Player/PlayerHealthBar" index="1"]
+layout_direction = 3
+layout_mode = 1
+offset_left = -357.0
+offset_top = -2.0
+offset_right = 0.0
+offset_bottom = 39.0
+
+[node name="Moves" type="Control" parent="Player"]
+anchors_preset = 0
+offset_left = 34.0
+offset_top = 107.0
+offset_right = 74.0
+offset_bottom = 147.0
+
+[node name="ActionButtonController" type="VBoxContainer" parent="Player/Moves"]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("3_pg458")
+
+[node name="ActionButton0" parent="Player/Moves/ActionButtonController" instance=ExtResource("4_ungnv")]
+layout_mode = 2
+
+[node name="ActionButton1" type="Button" parent="Player/Moves/ActionButtonController"]
+layout_mode = 2
+text = "Action 1"
+
+[node name="PlayerTeam" type="HBoxContainer" parent="Player"]
+layout_mode = 0
+offset_left = 36.0
+offset_top = 188.0
+offset_right = 76.0
+offset_bottom = 228.0
+
+[node name="FighterIcon" parent="Player/PlayerTeam" instance=ExtResource("2_jp8cw")]
+layout_mode = 2
+
+[node name="Enemy" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="EnemyHealthBar" parent="Enemy" instance=ExtResource("1_jusw1")]
+offset_left = 489.0
+offset_top = 28.0
+offset_right = 489.0
+offset_bottom = 28.0
+
+[node name="Health" parent="Enemy/EnemyHealthBar" index="1"]
+layout_direction = 2
+layout_mode = 1
+offset_bottom = 41.0
+
+[node name="EnemyTeam" type="Control" parent="Enemy"]
+anchors_preset = 0
+offset_left = 36.0
+offset_top = 188.0
+offset_right = 76.0
+offset_bottom = 228.0
+
+[node name="FighterIcon" parent="Enemy/EnemyTeam" instance=ExtResource("2_jp8cw")]
+
+[editable path="Player/PlayerHealthBar"]
+[editable path="Enemy/EnemyHealthBar"]

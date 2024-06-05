@@ -1,8 +1,4 @@
-public struct BattleLogList
-{
-    public ExpectedActionResponse response;
-    public BattleLogElement[] logs;
-}
+public record struct BattleLogMessage(ExpectedActionResponse response, BattleLogElement[] logs);
 public enum ExpectedActionResponse
 {
     Any, Swap, None
@@ -23,5 +19,5 @@ public enum BattleLogType
 }
 
 public record struct DamageLog(int team, int damage);
-public record struct ActionLog(int team, int actionIndex, string actionID);
+public record struct ActionLog(int team, string actionID);
 public record struct SwapLog(int team, int swapToIndex, string fighterID);
