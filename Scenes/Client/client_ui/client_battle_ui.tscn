@@ -116,6 +116,7 @@ offset_right = 262.0
 offset_bottom = 478.0
 
 [node name="WinLose" type="Control" parent="."]
+visible = false
 anchors_preset = 0
 offset_right = 40.0
 offset_bottom = 40.0

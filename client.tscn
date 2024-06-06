@@ -9,8 +9,8 @@
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = 0.0
-offset_bottom = 0.0
+offset_right = -826.0
+offset_bottom = -474.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
@@ -21,7 +21,7 @@ _logDest = NodePath("Panel/VBoxContainer/RichTextLabel")
 _lineEdit = NodePath("Panel/VBoxContainer/Send/LineEdit")
 _host = NodePath("Panel/VBoxContainer/Connect/Host")
 _roomID = NodePath("Panel/VBoxContainer/Room/RoomID")
-_actionID = NodePath("Panel/VBoxContainer/Battle/ActionID")
+_actionID = NodePath("")
 clientBattleUI = NodePath("ClientBattleUI")
 
 [node name="WebSocketClient" type="Node2D" parent="." index="0"]
@@ -82,20 +82,7 @@ layout_mode = 2
 
 [node name="SendTeam" type="Button" parent="Panel/VBoxContainer/Battle" index="0"]
 layout_mode = 2
-text = "Team"
-
-[node name="Action" type="Button" parent="Panel/VBoxContainer/Battle" index="1"]
-layout_mode = 2
-text = "Action"
-
-[node name="Swap" type="Button" parent="Panel/VBoxContainer/Battle" index="2"]
-layout_mode = 2
-text = "Swap"
-
-[node name="ActionID" type="SpinBox" parent="Panel/VBoxContainer/Battle" index="3"]
-layout_mode = 2
-min_value = -5.0
-max_value = 10.0
+text = "Send Team"
 
 [node name="RichTextLabel" parent="Panel/VBoxContainer" index="5"]
 text = "
@@ -106,10 +93,10 @@ layout_mode = 2
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
-offset_left = 15.0
-offset_top = 203.0
-offset_right = 1167.0
-offset_bottom = 203.0
+offset_left = 787.0
+offset_top = -5.0
+offset_right = 1939.0
+offset_bottom = -5.0
 
 [connection signal="ConnectedToServer" from="WebSocketClient" to="." method="OnWebSocketClientConnectedToServer"]
 [connection signal="ConnectionClosed" from="WebSocketClient" to="." method="OnWebSocketClientConnectionClosed"]
@@ -120,5 +107,3 @@ offset_bottom = 203.0
 [connection signal="pressed" from="Panel/VBoxContainer/Room/JoinRoom" to="." method="OnJoinRoomPressed"]
 [connection signal="pressed" from="Panel/VBoxContainer/Room/ExitRoom" to="." method="OnExitRoomPressed"]
 [connection signal="pressed" from="Panel/VBoxContainer/Battle/SendTeam" to="." method="OnSendTeam"]
-[connection signal="pressed" from="Panel/VBoxContainer/Battle/Action" to="." method="OnSelectActionButton"]
-[connection signal="pressed" from="Panel/VBoxContainer/Battle/Swap" to="." method="OnSelectSwapButton"]
