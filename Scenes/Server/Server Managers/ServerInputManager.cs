@@ -50,9 +50,10 @@ public partial class ServerInputManager : Node
     {
         // waitingToReset = false;
         p1Input = p1Dead ? ExpectedActionResponse.Swap : ExpectedActionResponse.None;
-        p2Input = p2Dead ? ExpectedActionResponse.Swap : ExpectedActionResponse.None; ;
-        player1Action = p1Dead ? null : BlankAction.blank;
-        player2Action = p2Dead ? null : BlankAction.blank;
+        p2Input = p2Dead ? ExpectedActionResponse.Swap : ExpectedActionResponse.None;
+        player1Action = p1Dead ? null : new BlankAction();
+        player2Action = p2Dead ? null : new BlankAction();
+        GD.Print($"p1action: {player1Action != null} p2Action: {player2Action != null}");
         if (!p1Dead && !p2Dead)
         {
             GD.PushError("server input manager found both players alive on death swap!");
@@ -75,6 +76,7 @@ public partial class ServerInputManager : Node
         {
             player2Action = action;
         }
+        GD.Print($"p1action: {player1Action != null} p2Action: {player2Action != null}");
         if (player1Action != null && player2Action != null)
         {
             SendTurnsToBattleManager();
@@ -83,8 +85,6 @@ public partial class ServerInputManager : Node
     void SendTurnsToBattleManager()
     {
         battleManager.RunActions(player1Action, player2Action);
-        player1Action = null;
-        player2Action = null;
     }
 }
 

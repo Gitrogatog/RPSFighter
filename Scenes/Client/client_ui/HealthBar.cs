@@ -18,8 +18,9 @@ public partial class HealthBar : Control
         minHealth = maxHealth;
         label.Text = $"{minHealth} / {maxHealth}";
     }
-    public void UpdateHealth(int newHealth)
+    public void UpdateHealth(int newHealth, int maxHealth)
     {
+        this.maxHealth = maxHealth;
         minHealth = newHealth;
         health.Scale = new Vector2((float)minHealth / maxHealth, health.Scale.Y);
         label.Text = $"{minHealth} / {maxHealth}";

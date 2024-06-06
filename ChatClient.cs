@@ -28,7 +28,13 @@ public partial class ChatClient : Control
     [Export] SpinBox _actionID;
     [Export] ClientBattleUI clientBattleUI;
     int clientID;
+    ClientFighter[] playerTeam;
 
+    public override void _Ready()
+    {
+        clientBattleUI.OnSelectAction += OnSelectAction;
+        clientBattleUI.OnSelectSwap += OnSelectSwap;
+    }
 
     public void Info(string message)
     {
@@ -68,6 +74,9 @@ public partial class ChatClient : Control
             case ServerToClientMessageType.ConfirmTeam:
                 break;
             case ServerToClientMessageType.StartMatch:
+                StartMatchInfo info = JsonSerializer.Deserialize<StartMatchInfo>(messageData.data);
+                StartMatch(info);
+
                 LoadGameUI();
                 break;
             case ServerToClientMessageType.BattleLog:
@@ -79,15 +88,43 @@ public partial class ChatClient : Control
         }
     }
 
+    void StartMatch(StartMatchInfo startMatchInfo)
+    {
+        clientID = startMatchInfo.teamID;
+        GD.Print(startMatchInfo.playerTeam);
+        FighterJson[] teamJson = startMatchInfo.playerTeam;
+        foreach (FighterJson fighterJson in teamJson)
+        {
+            GD.Print($"fighter: {fighterJson.Name}");
+        }
+
+        playerTeam = CreateFighter.CreateTeamFromJson(teamJson);
+        for (int i = 0; i < playerTeam.Length; i++)
+        {
+            AddChild(playerTeam[i]);
+        }
+        ClientFighter[] enemyTeam = CreateFighter.CreateBlankTeam(playerTeam.Length);
+        for (int i = 0; i < enemyTeam.Length; i++)
+        {
+            AddChild(enemyTeam[i]);
+        }
+        FighterData enemyData = DataGlobals.globalFighterDictionary.NameToFighterData[startMatchInfo.enemyFighter];
+        enemyTeam[0].PartialInit(enemyData);
+        clientBattleUI.InitBattle(playerTeam, enemyTeam);
+
+    }
+
     void RunLogEffects(BattleLogElement[] logs)
     {
         for (int i = 0; i < logs.Length; i++)
         {
             BattleLogElement log = logs[i];
+            GD.Print($"Action log: {log.type} data: {log.data}");
             switch (log.type)
             { //Action, Swap, Damage, Death, StartTurn, EndTurn
                 case BattleLogType.Action:
                     ActionLog actionLog = JsonSerializer.Deserialize<ActionLog>(log.data);
+                    GD.Print($"Performed action: {actionLog.actionID} from team: {actionLog.team}");
                     clientBattleUI.RunAction(actionLog.team == clientID, actionLog.actionID);
                     break;
                 case BattleLogType.Swap:
@@ -114,6 +151,7 @@ public partial class ChatClient : Control
 
     void ActionResponseUI(ExpectedActionResponse response)
     {
+        GD.Print("Action response from client");
         clientBattleUI.SetExpectedResponse(response);
     }
 
@@ -135,21 +173,11 @@ public partial class ChatClient : Control
         _client.Send(sendContent);
         _lineEdit.Text = "";
     }
-    void OnSelectActionButton()
-    {
-        int actionID = (int)_actionID.Value;
-        OnSelectAction(actionID);
-    }
     void OnSelectAction(int actionID)
     {
         Info($"Sending action with ID: {actionID}");
         // _client.Send($"!act{actionID}");
         SendMessage(ClientToServerMessageType.Action, actionID.ToString());
-    }
-    void OnSelectSwapButton()
-    {
-        int swapID = (int)_actionID.Value;
-        OnSelectSwap(swapID);
     }
     void OnSelectSwap(int swapID)
     {
@@ -242,6 +270,20 @@ public enum ClientToServerMessageType
 public enum ServerToClientMessageType
 {
     ConfirmJoin, ConfirmTeam, Error, StartMatch, BattleLog, MatchResult, MatchState, Alert
+}
+
+// public record struct StartMatchInfo(int teamID, TeamJson playerTeam, string enemyFighter);
+public struct StartMatchInfo
+{
+    public int teamID { get; set; }
+    public FighterJson[] playerTeam { get; set; }
+    public string enemyFighter { get; set; }
+    public StartMatchInfo(int teamID, FighterJson[] playerTeam, string enemyFighter)
+    {
+        this.teamID = teamID;
+        this.playerTeam = playerTeam;
+        this.enemyFighter = enemyFighter;
+    }
 }
 // list of possible messages:
 // sent from client to server:

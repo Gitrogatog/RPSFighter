@@ -4,13 +4,26 @@ using System;
 public partial class FighterIcon : Control
 {
     int teamIndex;
-    TextureRect sprite;
+    Button button;
     RichTextLabel healthLabel;
     public Action<int> OnClickEvent;
-    public override void _Ready()
+    public bool isAlive = true;
+    public bool isSelectable = true;
+    public bool isRevealed = false;
+    bool initialized = false;
+    public override void _EnterTree()
     {
-        sprite = GetNode<TextureRect>("FighterSprite");
-        healthLabel = GetNode<RichTextLabel>("HealthLabel");
+        Initialize();
+    }
+    void Initialize()
+    {
+        if (!initialized)
+        {
+            initialized = true;
+            // sprite = GetNode<TextureRect>("FighterSprite");
+            button = GetNode<Button>("Button");
+            healthLabel = GetNode<RichTextLabel>("HealthLabel");
+        }
     }
     public void SetIndex(int index, Action<int> action)
     {
@@ -19,8 +32,14 @@ public partial class FighterIcon : Control
     }
     public void SetFighter(BaseFighter fighter)
     {
-        sprite.Texture = fighter.Data.sprite;
+        Initialize();
+        button.Icon = fighter.Data.sprite;
         UpdateHealth(fighter.currentStats.health, fighter.baseStats.health);
+    }
+    public void SetBlank()
+    {
+        button.Icon = null;
+        healthLabel.Text = "";
     }
 
     public void UpdateHealth(int current, int max)
@@ -29,6 +48,10 @@ public partial class FighterIcon : Control
     }
     public void OnClick()
     {
-        OnClickEvent.Invoke(teamIndex);
+        if (isAlive && isSelectable)
+        {
+            OnClickEvent.Invoke(teamIndex);
+        }
+
     }
 }

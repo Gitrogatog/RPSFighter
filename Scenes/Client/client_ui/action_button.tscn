@@ -5,3 +5,5 @@
 [node name="ActionButton" type="Button"]
 text = "Action 0"
 script = ExtResource("1_bmeea")
+
+[connection signal="pressed" from="." to="." method="OnClick"]

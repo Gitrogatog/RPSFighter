@@ -5,8 +5,15 @@ public partial class ActionButton : Button
 {
     int actionIndex;
     public Action<int> OnClickEvent;
+    public bool isActive = false;
+    public void SetActive(bool active)
+    {
+        isActive = active;
+        Visible = active;
+    }
     public void SetIndex(int index, Action<int> action)
     {
+        isActive = true;
         actionIndex = index;
         OnClickEvent = action;
     }
@@ -16,6 +23,12 @@ public partial class ActionButton : Button
     }
     public void OnClick()
     {
-        OnClickEvent.Invoke(actionIndex);
+        GD.Print("button registered click!");
+
+        if (isActive)
+        {
+            OnClickEvent.Invoke(actionIndex);
+        }
+
     }
 }

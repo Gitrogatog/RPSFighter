@@ -1,10 +1,11 @@
-[gd_scene load_steps=4 format=3 uid="uid://cd0xky7s2w8dl"]
+[gd_scene load_steps=5 format=3 uid="uid://cd0xky7s2w8dl"]
 
 [ext_resource type="PackedScene" uid="uid://xvhh2xbl4dvf" path="res://chat.tscn" id="1_8facw"]
 [ext_resource type="Script" path="res://ChatClient.cs" id="2_lt00d"]
 [ext_resource type="Script" path="res://WebSocketClient.cs" id="3_d7anu"]
+[ext_resource type="PackedScene" uid="uid://cpamntn5ic7ro" path="res://Scenes/Client/client_ui/client_battle_ui.tscn" id="4_2cxr7"]
 
-[node name="Client" node_paths=PackedStringArray("_client", "_logDest", "_lineEdit", "_host", "_roomID", "_actionID") instance=ExtResource("1_8facw")]
+[node name="Client" node_paths=PackedStringArray("_client", "_logDest", "_lineEdit", "_host", "_roomID", "_actionID", "clientBattleUI") instance=ExtResource("1_8facw")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -21,6 +22,7 @@ _lineEdit = NodePath("Panel/VBoxContainer/Send/LineEdit")
 _host = NodePath("Panel/VBoxContainer/Connect/Host")
 _roomID = NodePath("Panel/VBoxContainer/Room/RoomID")
 _actionID = NodePath("Panel/VBoxContainer/Battle/ActionID")
+clientBattleUI = NodePath("ClientBattleUI")
 
 [node name="WebSocketClient" type="Node2D" parent="." index="0"]
 script = ExtResource("3_d7anu")
@@ -73,7 +75,7 @@ text = "Exit Room"
 layout_mode = 2
 min_value = 1.0
 max_value = 65535.0
-value = 2.0
+value = 1.0
 
 [node name="Battle" type="HBoxContainer" parent="Panel/VBoxContainer" index="4"]
 layout_mode = 2
@@ -94,6 +96,20 @@ text = "Swap"
 layout_mode = 2
 min_value = -5.0
 max_value = 10.0
+
+[node name="RichTextLabel" parent="Panel/VBoxContainer" index="5"]
+text = "
+"
+
+[node name="ClientBattleUI" parent="." index="2" instance=ExtResource("4_2cxr7")]
+layout_mode = 2
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = 15.0
+offset_top = 203.0
+offset_right = 1167.0
+offset_bottom = 203.0
 
 [connection signal="ConnectedToServer" from="WebSocketClient" to="." method="OnWebSocketClientConnectedToServer"]
 [connection signal="ConnectionClosed" from="WebSocketClient" to="." method="OnWebSocketClientConnectionClosed"]

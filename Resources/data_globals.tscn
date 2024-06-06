@@ -1,0 +1,10 @@
+[gd_scene load_steps=4 format=3 uid="uid://cix7x8y1hfjay"]
+
+[ext_resource type="Script" path="res://Resources/DataGlobals.cs" id="1_tlsy1"]
+[ext_resource type="Resource" uid="uid://b2d1wv48kq32p" path="res://Resources/Dictionaries/ActionDictionary.tres" id="2_jtnjy"]
+[ext_resource type="Resource" uid="uid://m17sx6dvghth" path="res://Resources/Dictionaries/FighterDictionary.tres" id="3_35p0u"]
+
+[node name="DataGlobals" type="Node"]
+script = ExtResource("1_tlsy1")
+actionDictionary = ExtResource("2_jtnjy")
+fighterDictionary = ExtResource("3_35p0u")

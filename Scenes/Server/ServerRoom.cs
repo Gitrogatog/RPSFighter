@@ -18,6 +18,8 @@ public class ServerRoom
     public ChatServer serverHead;
     BaseFighter[] p1Team;
     BaseFighter[] p2Team;
+    public TeamJson p1Json;
+    public TeamJson p2Json;
     public bool ReadyForMatchStart
     {
         get
@@ -105,12 +107,14 @@ public class ServerRoom
     {
         if (p1ID == playerID)
         {
+            p1Json = teamData;
             p1Team = CreateTeamFromJson(teamData);
             battleInstance.LoadPlayerTeam(0, p1Team);
             return true;
         }
         else if (p2ID == playerID)
         {
+            p2Json = teamData;
             p2Team = CreateTeamFromJson(teamData);
             battleInstance.LoadPlayerTeam(1, p2Team);
             return true;

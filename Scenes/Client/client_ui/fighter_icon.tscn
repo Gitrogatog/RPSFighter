@@ -10,18 +10,18 @@ offset_right = 40.0
 offset_bottom = 40.0
 script = ExtResource("1_m2ns5")
 
-[node name="FighterSprite" type="TextureRect" parent="."]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
-[node name="HealthLabel" type="RichTextLabel" parent="."]
-layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
-
 [node name="Button" type="Button" parent="."]
 custom_minimum_size = Vector2(50, 50)
 layout_mode = 0
-offset_right = 8.0
-offset_bottom = 8.0
+offset_right = 50.0
+offset_bottom = 50.0
+scale = Vector2(0.5, 0.5)
+
+[node name="HealthLabel" type="RichTextLabel" parent="."]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 50.0
+offset_right = 61.0
+offset_bottom = 90.0
+
+[connection signal="pressed" from="Button" to="." method="OnClick"]

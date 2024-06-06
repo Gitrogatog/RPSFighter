@@ -1,12 +1,11 @@
-[gd_scene load_steps=6 format=3 uid="uid://cpamntn5ic7ro"]
+[gd_scene load_steps=5 format=3 uid="uid://cpamntn5ic7ro"]
 
 [ext_resource type="PackedScene" uid="uid://4dh7xhhayksj" path="res://Scenes/Client/client_ui/health_bar.tscn" id="1_jusw1"]
 [ext_resource type="Script" path="res://Scenes/Client/client_ui/ClientBattleUI.cs" id="1_upkf1"]
-[ext_resource type="PackedScene" uid="uid://beofsqkjyrsiq" path="res://Scenes/Client/client_ui/fighter_icon.tscn" id="2_jp8cw"]
 [ext_resource type="Script" path="res://Scenes/Client/client_ui/ActionButtonController.cs" id="3_pg458"]
-[ext_resource type="PackedScene" uid="uid://b5bfhkbfgm37v" path="res://Scenes/Client/client_ui/action_button.tscn" id="4_ungnv"]
+[ext_resource type="Script" path="res://Scenes/Client/client_ui/ClientTeamIconController.cs" id="5_cj0af"]
 
-[node name="ClientBattleUI" type="Control"]
+[node name="ClientBattleUI" type="Control" node_paths=PackedStringArray("playerHealthBar", "enemyHealthBar", "actionController", "playerIcons", "enemyIcons", "textLog", "playerSprite", "enemySprite")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -14,6 +13,14 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 script = ExtResource("1_upkf1")
+playerHealthBar = NodePath("Player/PlayerHealthBar")
+enemyHealthBar = NodePath("Enemy/EnemyHealthBar")
+actionController = NodePath("Player/Moves/ActionButtonController")
+playerIcons = NodePath("Player/PlayerTeam")
+enemyIcons = NodePath("Enemy/EnemyTeam")
+textLog = NodePath("BattleLog")
+playerSprite = NodePath("Player/PlayerSprite")
+enemySprite = NodePath("Enemy/EnemySprite")
 
 [node name="Player" type="Control" parent="."]
 anchors_preset = 0
@@ -34,6 +41,15 @@ offset_top = -2.0
 offset_right = 0.0
 offset_bottom = 39.0
 
+[node name="HealthText" parent="Player/PlayerHealthBar" index="2"]
+offset_left = 40.0
+offset_top = 47.0
+offset_right = 80.0
+offset_bottom = 87.0
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+
 [node name="Moves" type="Control" parent="Player"]
 anchors_preset = 0
 offset_left = 34.0
@@ -43,26 +59,25 @@ offset_bottom = 147.0
 
 [node name="ActionButtonController" type="VBoxContainer" parent="Player/Moves"]
 layout_mode = 0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = 48.0
+offset_top = 2.0
+offset_right = 88.0
+offset_bottom = 42.0
 script = ExtResource("3_pg458")
-
-[node name="ActionButton0" parent="Player/Moves/ActionButtonController" instance=ExtResource("4_ungnv")]
-layout_mode = 2
-
-[node name="ActionButton1" type="Button" parent="Player/Moves/ActionButtonController"]
-layout_mode = 2
-text = "Action 1"
+actionButtonPrefabPath = "res://Scenes/Client/client_ui/action_button.tscn"
 
 [node name="PlayerTeam" type="HBoxContainer" parent="Player"]
 layout_mode = 0
-offset_left = 36.0
-offset_top = 188.0
-offset_right = 76.0
-offset_bottom = 228.0
+offset_left = 181.0
+offset_top = 222.0
+offset_right = 221.0
+offset_bottom = 262.0
+script = ExtResource("5_cj0af")
+fighterIconPrefabPath = "res://Scenes/Client/client_ui/fighter_icon.tscn"
 
-[node name="FighterIcon" parent="Player/PlayerTeam" instance=ExtResource("2_jp8cw")]
-layout_mode = 2
+[node name="PlayerSprite" type="Sprite2D" parent="Player"]
+texture_filter = 1
+position = Vector2(219, 136)
 
 [node name="Enemy" type="Control" parent="."]
 anchors_preset = 0
@@ -80,14 +95,58 @@ layout_direction = 2
 layout_mode = 1
 offset_bottom = 41.0
 
-[node name="EnemyTeam" type="Control" parent="Enemy"]
-anchors_preset = 0
-offset_left = 36.0
-offset_top = 188.0
-offset_right = 76.0
-offset_bottom = 228.0
+[node name="EnemyTeam" type="HBoxContainer" parent="Enemy"]
+layout_mode = 0
+offset_left = 521.0
+offset_top = 217.0
+offset_right = 561.0
+offset_bottom = 257.0
+script = ExtResource("5_cj0af")
+fighterIconPrefabPath = "res://Scenes/Client/client_ui/fighter_icon.tscn"
 
-[node name="FighterIcon" parent="Enemy/EnemyTeam" instance=ExtResource("2_jp8cw")]
+[node name="EnemySprite" type="Sprite2D" parent="Enemy"]
+texture_filter = 1
+position = Vector2(662, 139)
+
+[node name="BattleLog" type="RichTextLabel" parent="."]
+layout_mode = 0
+offset_left = 62.0
+offset_top = 278.0
+offset_right = 262.0
+offset_bottom = 478.0
+
+[node name="WinLose" type="Control" parent="."]
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="VictoryText" type="RichTextLabel" parent="WinLose"]
+layout_mode = 0
+offset_left = 435.0
+offset_top = 126.0
+offset_right = 503.0
+offset_bottom = 166.0
+text = "You Win!"
+fit_content = true
+autowrap_mode = 0
+
+[node name="LossText" type="RichTextLabel" parent="WinLose"]
+layout_mode = 0
+offset_left = 435.0
+offset_top = 126.0
+offset_right = 503.0
+offset_bottom = 166.0
+text = "You Lost..."
+fit_content = true
+autowrap_mode = 0
+
+[node name="ReturnButton" type="Button" parent="WinLose"]
+layout_mode = 0
+offset_left = 424.0
+offset_top = 166.0
+offset_right = 510.0
+offset_bottom = 197.0
+text = "Exit Room"
 
 [editable path="Player/PlayerHealthBar"]
 [editable path="Enemy/EnemyHealthBar"]

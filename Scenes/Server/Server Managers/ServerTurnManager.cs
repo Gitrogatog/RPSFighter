@@ -49,7 +49,9 @@ public partial class ServerTurnManager : Node
     }
     void RunTurn(IAction player1Action, IAction player2Action)
     {
-        DecideTurnOrder(player1Action, player2Action);
+        // DecideTurnOrder(player1Action, player2Action);
+        actionQueue[0] = player1Action;
+        actionQueue[1] = player2Action;
         RunStartTurnEffects();
         if (actionQueue[0].Priority >= actionQueue[1].Priority)
         {
@@ -77,6 +79,7 @@ public partial class ServerTurnManager : Node
         {
             // expect swap input
             expectingEndOfTurnSwap = true;
+            GD.Print("Server has initiated death swap!");
             DeathSwapEvent.Invoke(player1Team.activeFighterIndex == -1, player2Team.activeFighterIndex == -1);
         }
         else
@@ -128,23 +131,22 @@ public partial class ServerTurnManager : Node
 
     void DecideTurnOrder(IAction player1Action, IAction player2Action)
     {
-        actionQueue[0] = player1Action;
-        actionQueue[1] = player2Action;
-        // if (player1Action.Priority > player2Action.Priority)
-        // {
-        //     actionQueue[0] = player1Action;
-        //     actionQueue[1] = player2Action;
-        // }
-        // else if (player1Action.Priority < player2Action.Priority)
-        // {
-        //     actionQueue[0] = player2Action;
-        //     actionQueue[1] = player1Action;
-        // }
-        // else
-        // {
-        //     actionQueue[0] = player1Action;
-        //     actionQueue[1] = player2Action;
-        // }
+
+        if (player1Action.Priority > player2Action.Priority)
+        {
+            actionQueue[0] = player1Action;
+            actionQueue[1] = player2Action;
+        }
+        else if (player1Action.Priority < player2Action.Priority)
+        {
+            actionQueue[0] = player2Action;
+            actionQueue[1] = player1Action;
+        }
+        else
+        {
+            actionQueue[0] = player1Action;
+            actionQueue[1] = player2Action;
+        }
     }
 
     public void UseAction(int userTeam, string actionID)
@@ -179,6 +181,7 @@ public partial class ServerTurnManager : Node
         defender.currentStats.health -= finalDamage;
         logManager.RegisterDamage(targetTeam, finalDamage);
         GD.Print($"P{1 - targetTeam} dealt {finalDamage} damage to P{targetTeam}");
+        CheckForDefeat();
     }
     void CheckForDefeat()
     {

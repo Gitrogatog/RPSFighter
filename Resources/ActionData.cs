@@ -24,7 +24,7 @@ public interface IAction
 
 public class BlankAction : IAction
 {
-    public static BlankAction blank = new BlankAction();
+
     public int Priority { get; set; } = 0;
     public void UseAction(int playerIndex, ServerTurnManager turnManager)
     {

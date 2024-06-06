@@ -7,12 +7,10 @@
 [ext_resource type="Script" path="res://Scenes/Server/Server Managers/ServerLogManager.cs" id="5_j7jdg"]
 [ext_resource type="PackedScene" uid="uid://dpotj1s8yijjq" path="res://Scenes/UI/test_server_spinbox_controls.tscn" id="6_tl0cl"]
 
-[node name="ServerBattleScene" type="Node" node_paths=PackedStringArray("turnManager", "inputManager")]
+[node name="ServerBattleScene" type="Node"]
 script = ExtResource("1_fk8xq")
 p1FighterData = Array[Resource]([ExtResource("2_5q0sm"), null])
 p2FighterData = Array[Resource]([ExtResource("2_5q0sm"), null])
-turnManager = NodePath("Turn Manager")
-inputManager = NodePath("Input Manager")
 
 [node name="Turn Manager" type="Node" parent="." node_paths=PackedStringArray("logManager")]
 script = ExtResource("3_4qusj")

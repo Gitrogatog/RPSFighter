@@ -15,6 +15,15 @@ run/main_scene="res://server.tscn"
 config/features=PackedStringArray("4.2", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
+[autoload]
+
+DataGlobals="*res://Resources/data_globals.tscn"
+
+[display]
+
+window/size/viewport_width=1652
+window/size/viewport_height=948
+
 [dotnet]
 
 project/assembly_name="Chat Demo"

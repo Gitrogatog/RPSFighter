@@ -8,16 +8,19 @@ public partial class ServerBattleManager : Node
     [Export] FighterData[] p2FighterData;
     BaseFighter[] p1Fighters;
     BaseFighter[] p2Fighters;
-    [Export] public ServerTurnManager turnManager;
-    [Export] public ServerInputManager inputManager;
-    [Export] public ServerLogManager logManager;
+    public ServerTurnManager turnManager;
+    public ServerInputManager inputManager;
+    public ServerLogManager logManager;
     PackedScene baseFighter;
     public int p1ID;
     public int p2ID;
     [Export] public bool hasMatchStarted = false;
-    public override void _Ready()
+    public override void _EnterTree()
     {
         baseFighter = GD.Load<PackedScene>("res://Scenes/Fighters/base_fighter.tscn");
+        turnManager = GetNode<ServerTurnManager>("Turn Manager");
+        inputManager = GetNode<ServerInputManager>("Input Manager");
+        logManager = GetNode<ServerLogManager>("Log Manager");
         // LoadPlayerTeam(0, p1FighterData);
         // LoadPlayerTeam(1, p2FighterData);
         // StartBattle();

@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://c4ootx3kfiodg"]
+
+[ext_resource type="Script" path="res://Scenes/Test_Scenes/TestClientBattleUI.cs" id="1_7wm0u"]
+[ext_resource type="PackedScene" uid="uid://cpamntn5ic7ro" path="res://Scenes/Client/client_ui/client_battle_ui.tscn" id="2_3e3ef"]
+
+[node name="Client UI Tester" type="Node"]
+script = ExtResource("1_7wm0u")
+
+[node name="ClientBattleUI" parent="." instance=ExtResource("2_3e3ef")]

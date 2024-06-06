@@ -1,7 +1,8 @@
-[gd_resource type="Resource" load_steps=3 format=3 uid="uid://d0h3u23gex3ou"]
+[gd_resource type="Resource" load_steps=4 format=3 uid="uid://d0h3u23gex3ou"]
 
 [ext_resource type="Resource" uid="uid://xlqx73av0ggq" path="res://Resources/Actions/rock_attack01.tres" id="1_175fl"]
 [ext_resource type="Script" path="res://Resources/FighterData.cs" id="1_chug0"]
+[ext_resource type="Texture2D" uid="uid://bl7838y3y3sc7" path="res://Art/FighterSprites/sketch_wizard-6.png.png" id="3_wjsdd"]
 
 [resource]
 script = ExtResource("1_chug0")
@@ -12,3 +13,4 @@ Speed = 3
 fighterTyping = 0
 actions = Array[Resource]([ExtResource("1_175fl")])
 Name = "rock man"
+sprite = ExtResource("3_wjsdd")

@@ -1,11 +1,11 @@
 public class FighterJson
 {
-    public string Name;
-    public string Nickname;
-    public string[] actionNames;
+    public string Name { get; set; }
+    public string Nickname { get; set; }
+    public string[] actionNames { get; set; }
 }
 
 public class TeamJson
 {
-    public FighterJson[] fighters;
+    public FighterJson[] fighters { get; set; }
 }

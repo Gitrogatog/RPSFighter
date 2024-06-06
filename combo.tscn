@@ -13,8 +13,8 @@ grow_vertical = 2
 
 [node name="HBoxContainer" type="HBoxContainer" parent="."]
 layout_mode = 0
-offset_right = 1152.0
-offset_bottom = 648.0
+offset_right = 800.0
+offset_bottom = 400.0
 
 [node name="Server" parent="HBoxContainer" instance=ExtResource("1_ecm0r")]
 layout_mode = 2
@@ -26,5 +26,20 @@ size_flags_horizontal = 3
 [node name="Client" parent="HBoxContainer/VBoxContainer" instance=ExtResource("2_ds8ig")]
 layout_mode = 2
 
+[node name="ClientBattleUI" parent="HBoxContainer/VBoxContainer/Client" index="2"]
+offset_left = -441.0
+offset_top = 423.0
+offset_right = 711.0
+offset_bottom = 423.0
+
 [node name="Client2" parent="HBoxContainer/VBoxContainer" instance=ExtResource("2_ds8ig")]
 layout_mode = 2
+
+[node name="ClientBattleUI" parent="HBoxContainer/VBoxContainer/Client2" index="2"]
+offset_left = 393.0
+offset_top = -171.0
+offset_right = 1545.0
+offset_bottom = -171.0
+
+[editable path="HBoxContainer/VBoxContainer/Client"]
+[editable path="HBoxContainer/VBoxContainer/Client2"]

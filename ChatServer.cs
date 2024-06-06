@@ -66,11 +66,6 @@ public partial class ChatServer : Control
     }
     void OnWebSocketServerMessageReceived(int peerId, string message)
     {
-        // if (message[0] == '!')
-        // {
-
-        //     return;
-        // }
         ProcessClientRequest(peerId, message);
         Info($"Server received data from peer {peerId}: {message}");
         // _server.Send(-peerId, $"{peerId} Says: {message}");
@@ -136,7 +131,7 @@ public partial class ChatServer : Control
         ServerRoom room = GetPeerRoom(peerID);
         if (room == null) return;
         // int swapID = swapData.ToInt();
-        if (!room.SelectAction(peerID, swapID))
+        if (!room.SelectSwap(peerID, swapID))
         {
             SendMessage(peerID, ServerToClientMessageType.Error, "swap input failed!");
         }
@@ -147,8 +142,8 @@ public partial class ChatServer : Control
         var logs = room.battleInstance.logManager.GetLog();
         BattleLogMessage logMessage = new BattleLogMessage(ExpectedActionResponse.Any, logs);
         string messageJson = JsonSerializer.Serialize(logMessage);
-        SendMessage(room.p1ID, ServerToClientMessageType.MatchState, messageJson);
-        SendMessage(room.p2ID, ServerToClientMessageType.MatchState, messageJson);
+        SendMessage(room.p1ID, ServerToClientMessageType.BattleLog, messageJson);
+        SendMessage(room.p2ID, ServerToClientMessageType.BattleLog, messageJson);
     }
     public void ReportDeathSwap(ServerRoom room, bool p1Swap, bool p2Swap)
     {
@@ -157,8 +152,8 @@ public partial class ChatServer : Control
         BattleLogMessage p2LogMessage = new BattleLogMessage(p2Swap ? ExpectedActionResponse.Swap : ExpectedActionResponse.None, logs);
         string p1MessageJson = JsonSerializer.Serialize(p1LogMessage);
         string p2MessageJson = JsonSerializer.Serialize(p2LogMessage);
-        SendMessage(room.p1ID, ServerToClientMessageType.MatchState, p1MessageJson);
-        SendMessage(room.p2ID, ServerToClientMessageType.MatchState, p2MessageJson);
+        SendMessage(room.p1ID, ServerToClientMessageType.BattleLog, p1MessageJson);
+        SendMessage(room.p2ID, ServerToClientMessageType.BattleLog, p2MessageJson);
     }
 
     void GetTeamRequest(int peerID, string teamData)
@@ -188,9 +183,27 @@ public partial class ChatServer : Control
         SendMessage(peerID, ServerToClientMessageType.ConfirmTeam, "Team was accepted!");
         if (room.ReadyForMatchStart)
         {
-            room.StartMatch();
+            StartMatch(room);
             GD.Print($"Room {room.roomID} has begun its match");
         }
+    }
+
+    void StartMatch(ServerRoom room)
+    {
+        room.serverHead = this;
+        room.StartMatch();
+        StartMatchInfo info1 = new StartMatchInfo(0, room.p1Json.fighters, room.p2Json.fighters[0].Name);
+        string json1 = JsonSerializer.Serialize(info1);
+        GD.Print("s1:");
+        GD.Print(json1);
+        GD.Print($"serialized 1: {json1}, length: {room.p1Json.fighters.Length}");
+        SendMessage(room.p1ID, ServerToClientMessageType.StartMatch, json1);
+        StartMatchInfo info2 = new StartMatchInfo(1, room.p2Json.fighters, room.p1Json.fighters[0].Name);
+        string json2 = JsonSerializer.Serialize(info2);
+        GD.Print("s2:");
+        GD.Print(json2);
+        GD.Print($"serialized 2: {json2}, length: {room.p2Json.fighters.Length}");
+        SendMessage(room.p2ID, ServerToClientMessageType.StartMatch, json2);
     }
 
     void SendMatchState(ServerRoom room)
