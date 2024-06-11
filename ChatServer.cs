@@ -60,7 +60,6 @@ public partial class ChatServer : Control
     void OnWebSocketServerClientDisconnected(int peerId)
     {
         WebSocketPeer peer = _server.peers[peerId];
-        // Info($"Remote client disconnected {peerId}. Code {peer.GetCloseCode()}, Reason: {peer.GetCloseReason()}");
         Info($"Remote client {peerId} disconnected");
         _server.Send(-peerId, $"{peerId} disconnected");
     }
@@ -68,7 +67,6 @@ public partial class ChatServer : Control
     {
         ProcessClientRequest(peerId, message);
         Info($"Server received data from peer {peerId}: {message}");
-        // _server.Send(-peerId, $"{peerId} Says: {message}");
     }
 
     void ProcessClientRequest(int peerID, string message)
@@ -100,10 +98,6 @@ public partial class ChatServer : Control
                 // case ClientToServerMessageType.:
                 //     break;
         }
-        // Variant parsed = Json.ParseString(message);
-        // GD.Print($"received type: {parsed.VariantType}");
-        // // GD.Print($"received as string: {parsed}");
-        // GD.Print($"received contents: {parsed}");
     }
 
     ServerRoom GetPeerRoom(int peerID)
@@ -156,14 +150,16 @@ public partial class ChatServer : Control
         SendMessage(room.p2ID, ServerToClientMessageType.BattleLog, p2MessageJson);
     }
 
+    public void ReportBattleEnd(ServerRoom room, bool p1Win)
+    {
+        int winnerID = p1Win ? room.p1ID : room.p2ID;
+        int loserID = p1Win ? room.p2ID : room.p1ID;
+        SendMessage(winnerID, ServerToClientMessageType.MatchResult, "1");
+        SendMessage(loserID, ServerToClientMessageType.MatchResult, "0");
+    }
+
     void GetTeamRequest(int peerID, string teamData)
     {
-        // if (!ServerRoom.pIDToRoomID.ContainsKey(peerID))
-        // {
-        //     SendMessage(peerID, ServerToClientMessageType.Error, "You're not in a room!");
-        //     return;
-        // }
-        // ServerRoom room = ServerRoom.roomIDTable[ServerRoom.pIDToRoomID[peerID]];
         ServerRoom room = GetPeerRoom(peerID);
         if (room == null) return;
         // TeamJson teamJson = JsonSerializer.Deserialize<TeamJson>(teamData);
@@ -210,7 +206,6 @@ public partial class ChatServer : Control
     {
         int p1ID = room.p1ID;
         int p2ID = room.p2ID;
-        // SendMessage(, )
     }
 
     void CreateRoomRequest(int peerID)

@@ -4,7 +4,6 @@ using System;
 public partial class ClientTeamIconController : Control
 {
     [Export] string fighterIconPrefabPath;
-    // [Export] PackedScene iconPrefab;
     public FighterIcon[] fighters;
     public event Action<int> OnSelectSwap = delegate { };
     public void Init(ClientFighter[] team)

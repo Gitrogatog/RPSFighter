@@ -39,7 +39,7 @@ public static class CreateFighter
     }
     public static ActionData LoadAction(string actionName)
     {
-        ActionData data = ChatServer.globalActionDictionary.NameToActionData[actionName];
+        ActionData data = DataGlobals.globalActionDictionary.NameToActionData[actionName];
         if (data == null)
         {
             GD.PrintErr($"couldn't find ActionData with name {actionName}");

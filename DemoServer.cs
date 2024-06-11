@@ -9,17 +9,6 @@ public partial class DemoServer : Node2D
     [Export] bool useTLS = false;
     [Export] X509Certificate tlsCert;
     [Export] CryptoKey tlsKey;
-    // [Export] bool refuseNewConnections {
-    //     get{
-
-    //     }
-    //     set{
-    //         if(value){
-    //             // pending
-    //         }
-    //     }
-    // }
-    // TcpServer tcpServer = new TcpServer();
 
     const int PORT = 9080;
     TcpServer tcpServer = new TcpServer();

@@ -9,7 +9,6 @@ public partial class ServerGameLoop : Node
     [Export] LineEdit _lineEdit;
     [Export] SpinBox _port;
 
-    // Godot.Collections.Dictionary messageData;
 
     public void Info(string message)
     {
@@ -47,14 +46,12 @@ public partial class ServerGameLoop : Node
     {
         Variant parsed = Json.ParseString(message);
         GD.Print($"received type: {parsed.VariantType}");
-        // GD.Print($"received as string: {parsed}");
         GD.Print($"received contents: {parsed}");
 
         if (parsed.VariantType != Variant.Type.Dictionary)
         {
             return;
         }
-        // int msgType = parsed.
     }
 
     // UI signals

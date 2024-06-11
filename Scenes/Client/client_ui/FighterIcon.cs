@@ -20,7 +20,6 @@ public partial class FighterIcon : Control
         if (!initialized)
         {
             initialized = true;
-            // sprite = GetNode<TextureRect>("FighterSprite");
             button = GetNode<Button>("Button");
             healthLabel = GetNode<RichTextLabel>("HealthLabel");
         }

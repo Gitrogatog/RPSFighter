@@ -2,6 +2,7 @@ using Godot;
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 public class ServerRoom
 {
@@ -43,6 +44,7 @@ public class ServerRoom
         p2ID = -1;
         battleInstance.turnManager.TurnEndEvent += EndOfTurn;
         battleInstance.turnManager.DeathSwapEvent += DeathSwap;
+        battleInstance.turnManager.MatchEndedEvent += MatchEnd;
     }
     public void CloseRoom()
     {
@@ -68,6 +70,10 @@ public class ServerRoom
             return true;
         }
         return false;
+    }
+    public void MatchEnd(int loser)
+    {
+        serverHead.ReportBattleEnd(this, loser != 0);
     }
     public bool SelectAction(int playerID, int actionIndex)
     {

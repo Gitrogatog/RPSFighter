@@ -5,7 +5,7 @@
 [ext_resource type="Script" path="res://Scenes/Client/client_ui/ActionButtonController.cs" id="3_pg458"]
 [ext_resource type="Script" path="res://Scenes/Client/client_ui/ClientTeamIconController.cs" id="5_cj0af"]
 
-[node name="ClientBattleUI" type="Control" node_paths=PackedStringArray("playerHealthBar", "enemyHealthBar", "actionController", "playerIcons", "enemyIcons", "textLog", "playerSprite", "enemySprite")]
+[node name="ClientBattleUI" type="Control" node_paths=PackedStringArray("playerHealthBar", "enemyHealthBar", "actionController", "playerIcons", "enemyIcons", "textLog", "playerSprite", "enemySprite", "responseLabel")]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -21,6 +21,32 @@ enemyIcons = NodePath("Enemy/EnemyTeam")
 textLog = NodePath("BattleLog")
 playerSprite = NodePath("Player/PlayerSprite")
 enemySprite = NodePath("Enemy/EnemySprite")
+responseLabel = NodePath("ResponseText")
+
+[node name="ResponseText" type="RichTextLabel" parent="."]
+layout_mode = 0
+offset_left = 307.0
+offset_top = 105.0
+offset_right = 507.0
+offset_bottom = 155.0
+scale = Vector2(1.5, 1.5)
+text = "Waiting..."
+scroll_active = false
+
+[node name="LogTItle" type="RichTextLabel" parent="."]
+layout_mode = 0
+offset_left = 76.0
+offset_top = 287.0
+offset_right = 459.0
+offset_bottom = 487.0
+text = "Battle Log"
+
+[node name="BattleLog" type="RichTextLabel" parent="."]
+layout_mode = 0
+offset_left = 79.0
+offset_top = 318.0
+offset_right = 462.0
+offset_bottom = 518.0
 
 [node name="Player" type="Control" parent="."]
 anchors_preset = 0
@@ -95,6 +121,15 @@ layout_direction = 2
 layout_mode = 1
 offset_bottom = 41.0
 
+[node name="HealthText" parent="Enemy/EnemyHealthBar" index="2"]
+offset_left = 15.0
+offset_top = 49.0
+offset_right = 55.0
+offset_bottom = 89.0
+fit_content = true
+scroll_active = false
+autowrap_mode = 0
+
 [node name="EnemyTeam" type="HBoxContainer" parent="Enemy"]
 layout_mode = 0
 offset_left = 521.0
@@ -107,13 +142,6 @@ fighterIconPrefabPath = "res://Scenes/Client/client_ui/fighter_icon.tscn"
 [node name="EnemySprite" type="Sprite2D" parent="Enemy"]
 texture_filter = 1
 position = Vector2(662, 139)
-
-[node name="BattleLog" type="RichTextLabel" parent="."]
-layout_mode = 0
-offset_left = 62.0
-offset_top = 278.0
-offset_right = 262.0
-offset_bottom = 478.0
 
 [node name="WinLose" type="Control" parent="."]
 visible = false

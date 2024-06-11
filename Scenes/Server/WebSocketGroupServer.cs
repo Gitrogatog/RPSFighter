@@ -4,10 +4,6 @@ using System.Collections.Generic;
 
 public partial class WebSocketGroupServer : Node
 {
-    // signals
-    // signal message_received(peer_id: int, message)
-    // signal client_connected(peer_id: int)
-    // signal client_disconnected(peer_id: int)
     [Signal] public delegate void MessageReceivedEventHandler(int peerId, string message);
     [Signal] public delegate void ClientConnectedEventHandler(int peerId);
     [Signal] public delegate void ClientDisconnectedEventHandler(int peerId);
@@ -36,7 +32,6 @@ public partial class WebSocketGroupServer : Node
         }
     }
     bool refuse = false;
-    // TcpServer tcpServer = new TcpServer();
 
     const int PORT = 9080;
     TcpServer tcpServer = new TcpServer();
@@ -67,8 +62,6 @@ public partial class WebSocketGroupServer : Node
     // send message to given peer id
     public Error Send(int peerId, string message)
     {
-        // message.VariantType == Variant.Type.String
-        // var type = message.VariantType;
         if (peerId <= 0)
         {
             //send message to multiple peers:
@@ -80,15 +73,6 @@ public partial class WebSocketGroupServer : Node
                     continue;
                 }
                 peers[id].SendText((string)message);
-                // if (type == Variant.Type.String)
-                // {
-                //     peers[id].SendText((string)message);
-                // }
-                // else
-                // {
-                //     // peers[id].PutVar(message);
-                //     peers[id].PutPacket((byte[])message);
-                // }
             }
             return Error.Ok;
         }
@@ -98,11 +82,6 @@ public partial class WebSocketGroupServer : Node
         }
         WebSocketPeer socket = peers[peerId];
         return socket.SendText((string)message);
-        // if (type == Variant.Type.String)
-        // {
-        //     return socket.SendText((string)message);
-        // }
-        // return socket.Send(GD.VarToBytes(message));
     }
 
     // gets message sent from websocket with given peer ID
@@ -120,11 +99,6 @@ public partial class WebSocketGroupServer : Node
         }
         var pkt = socket.GetPacket();
         return pkt.GetStringFromUtf8();
-        // if (socket.WasStringPacket())
-        // {
-        //     return pkt.GetStringFromUtf8();
-        // }
-        // return GD.BytesToVar(pkt);
     }
 
     // returns true if the websocket with the passed peerId
@@ -273,16 +247,6 @@ public partial class WebSocketGroupServer : Node
         string time = Time.GetTimeStringFromSystem();
         GD.PrintErr(message);
     }
-    // WebSocket 
-    // public override void _Ready()
-    // {
-    //     base._Ready();
-    //     if (tcpServer.Listen(PORT) != Error.Ok)
-    //     {
-    //         LogMessage("failed to start server");
-    //         SetProcess(false);
-    //     }
-    // }
     public override void _Process(double delta)
     {
         Poll();

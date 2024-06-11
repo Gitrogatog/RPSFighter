@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="RPSFighter"
-run/main_scene="res://client.tscn"
+run/main_scene="res://server.tscn"
 config/features=PackedStringArray("4.2", "C#", "Forward Plus")
 config/icon="res://icon.svg"
 
@@ -21,8 +21,8 @@ DataGlobals="*res://Resources/data_globals.tscn"
 
 [display]
 
-window/size/viewport_width=1652
-window/size/viewport_height=948
+window/size/viewport_width=1600
+window/size/viewport_height=500
 
 [dotnet]
 

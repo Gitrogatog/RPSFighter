@@ -26,7 +26,6 @@ public partial class ServerInputManager : Node
         {
             return false;
         }
-        // battleManager.AddTurn(playerIndex, fighter.actions[actionIndex]);
         SetHeldTurn(playerIndex, fighter.actions[actionIndex]);
         return true;
     }
@@ -35,7 +34,6 @@ public partial class ServerInputManager : Node
         if (p1Input == ExpectedActionResponse.None && playerIndex == 0) return false;
         if (p2Input == ExpectedActionResponse.None && playerIndex == 1) return false;
         if (!battleManager.IsSwapIndexValid(playerIndex, swapIndex)) return false;
-        // battleManager.AddTurn(playerIndex, new SwapAction(swapIndex));
         SetHeldTurn(playerIndex, new SwapAction(swapIndex));
         return true;
     }
@@ -48,7 +46,6 @@ public partial class ServerInputManager : Node
     }
     void OnDeathSwap(bool p1Dead, bool p2Dead)
     {
-        // waitingToReset = false;
         p1Input = p1Dead ? ExpectedActionResponse.Swap : ExpectedActionResponse.None;
         p2Input = p2Dead ? ExpectedActionResponse.Swap : ExpectedActionResponse.None;
         player1Action = p1Dead ? null : new BlankAction();
@@ -59,13 +56,6 @@ public partial class ServerInputManager : Node
             GD.PushError("server input manager found both players alive on death swap!");
         }
     }
-    // void RegisterSelectedAction(int playerIndex, IAction action)
-    // {
-    //     if (action is ActionData actionData)
-    //     {
-
-    //     }
-    // }
     void SetHeldTurn(int playerIndex, IAction action)
     {
         if (playerIndex == 0)

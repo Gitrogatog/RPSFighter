@@ -16,13 +16,16 @@ public partial class ClientBattleUI : Control
     [Export] RichTextLabel textLog;
     [Export] Sprite2D playerSprite;
     [Export] Sprite2D enemySprite;
+    [Export] RichTextLabel responseLabel;
     ClientFighter[] playerFighters;
     ClientFighter[] enemyFighters;
     int activePlayerIndex = 0;
     int activeEnemyIndex = 0;
+    bool matchIsOver = false;
     ExpectedActionResponse currentResponse = ExpectedActionResponse.Any;
     public void InitBattle(ClientFighter[] playerFighters, ClientFighter[] enemyFighters)
     {
+        matchIsOver = false;
         this.playerFighters = playerFighters;
         this.enemyFighters = enemyFighters;
         actionController.OnSelectAction += SelectAction;
@@ -35,6 +38,13 @@ public partial class ClientBattleUI : Control
 
         playerSprite.Texture = playerFighters[0].Data.sprite;
         enemySprite.Texture = enemyFighters[0].Data.sprite;
+    }
+    public void SetMatchEnd(bool win)
+    {
+        actionController.DisableButtons();
+        currentResponse = ExpectedActionResponse.None;
+        matchIsOver = true;
+        responseLabel.Text = win ? "You Won!" : "You Lost";
     }
     public void SelectAction(int index)
     {
@@ -50,31 +60,23 @@ public partial class ClientBattleUI : Control
         }
 
     }
-    // all possible battle updates
-    // change health
-    // swap out
-    // use action (?)
-    // change stats
-    // die
     public void SetExpectedResponse(ExpectedActionResponse response)
     {
+        if (matchIsOver) return;
         currentResponse = response;
         switch (response)
         {
             case ExpectedActionResponse.Any:
-                GD.Print("Expecting any action!");
-                AddLog("Expecting any action!");
                 ClientFighter fighter = playerFighters[activePlayerIndex];
                 actionController.UpdateButtonActions(fighter.actions);
+                responseLabel.Text = "Select an action or swap";
                 break;
             case ExpectedActionResponse.Swap:
-                GD.Print("Expecting swap");
-                AddLog("Expecting swap");
+                responseLabel.Text = "Select a fighter to swap in";
                 actionController.DisableButtons();
                 break;
             case ExpectedActionResponse.None:
-                GD.Print("Wait for response");
-                AddLog("Wait for response");
+                responseLabel.Text = "Waiting for opponent...";
                 actionController.DisableButtons();
                 break;
         }
@@ -121,12 +123,10 @@ public partial class ClientBattleUI : Control
     }
     void UpdatePlayerHealth(int current, int max)
     {
-        // playerHealthBar.SetMaxHealth(max);
         playerHealthBar.UpdateHealth(current, max);
     }
     void UpdateEnemyHealth(int current, int max)
     {
-        // enemyHealthBar.SetMaxHealth(max);
         enemyHealthBar.UpdateHealth(current, max);
     }
     public void RunDamage(bool myTeam, int damage)

@@ -32,11 +32,6 @@ public partial class WebSocketClient : Node2D
     public Error Send(string message)
     {
         return socket.SendText((string)message);
-        // if (message.VariantType == Variant.Type.String)
-        // {
-
-        // }
-        // return socket.Send(GD.VarToBytes(message));
     }
 
     public Error SendAction(int actionID)
@@ -52,13 +47,6 @@ public partial class WebSocketClient : Node2D
         }
         var packet = socket.GetPacket();
         return packet.GetStringFromUtf8();
-        // JSON
-        // Json.ParseString()
-        // if (socket.WasStringPacket())
-        // {
-
-        // }
-        // return GD.BytesToVar(packet);
     }
 
     public void Close(int code = 1000, string reason = "")

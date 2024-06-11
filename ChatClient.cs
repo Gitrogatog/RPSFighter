@@ -1,18 +1,10 @@
 using Godot;
+using Microsoft.VisualBasic;
 using System.Collections.Generic;
 using System.Text.Json;
 
 public partial class ChatClient : Control
 {
-    //     signal lobby_joined(lobby)
-    // signal connected(id, use_mesh)
-    // signal disconnected()
-    // signal peer_connected(id)
-    // signal peer_disconnected(id)
-    // signal offer_received(id, offer)
-    // signal answer_received(id, answer)
-    // signal candidate_received(id, mid, index, sdp)
-    // signal lobby_sealed()
     [Signal] public delegate void JoinedRoomMessageEventHandler(int roomID);
     [Signal] public delegate void ExitedRoomMessageEventHandler(string data);
     [Signal] public delegate void VerifiedTeamMessageEventHandler(string data);
@@ -47,7 +39,6 @@ public partial class ChatClient : Control
     {
         var webSocket = _client.Socket;
         Info($"This client just disconnected");
-        // Info($"This client just disconnected with code {webSocket.GetCloseCode()}, reason {webSocket.GetCloseReason()}");
     }
     void OnWebSocketClientConnectedToServer()
     {
@@ -56,7 +47,6 @@ public partial class ChatClient : Control
     }
     void OnWebSocketClientMessageReceived(string message)
     {
-        Info(message);
         ProcessServerMessage(message);
     }
 
@@ -72,17 +62,22 @@ public partial class ChatClient : Control
                 Info($"Joined room {roomID}");
                 break;
             case ServerToClientMessageType.ConfirmTeam:
+                Info("Team was confirmed!");
                 break;
             case ServerToClientMessageType.StartMatch:
+                Info("Match begun");
                 StartMatchInfo info = JsonSerializer.Deserialize<StartMatchInfo>(messageData.data);
                 StartMatch(info);
 
-                LoadGameUI();
                 break;
             case ServerToClientMessageType.BattleLog:
                 BattleLogMessage battleLogMessage = JsonSerializer.Deserialize<BattleLogMessage>(messageData.data);
                 RunLogEffects(battleLogMessage.logs);
                 ActionResponseUI(battleLogMessage.response);
+                break;
+            case ServerToClientMessageType.MatchResult:
+                bool didiwin = messageData.data.ToInt() == 1;
+                clientBattleUI.SetMatchEnd(didiwin);
                 break;
 
         }
@@ -111,7 +106,8 @@ public partial class ChatClient : Control
         FighterData enemyData = DataGlobals.globalFighterDictionary.NameToFighterData[startMatchInfo.enemyFighter];
         enemyTeam[0].PartialInit(enemyData);
         clientBattleUI.InitBattle(playerTeam, enemyTeam);
-
+        Info($"You sent out {playerTeam[0].name}");
+        Info($"Opponent sent out {enemyTeam[0].name}");
     }
 
     void RunLogEffects(BattleLogElement[] logs)
@@ -125,18 +121,22 @@ public partial class ChatClient : Control
                 case BattleLogType.Action:
                     ActionLog actionLog = JsonSerializer.Deserialize<ActionLog>(log.data);
                     GD.Print($"Performed action: {actionLog.actionID} from team: {actionLog.team}");
+                    Info($"{(actionLog.team == clientID ? "You" : "Opponent")} used {actionLog.actionID}");
                     clientBattleUI.RunAction(actionLog.team == clientID, actionLog.actionID);
                     break;
                 case BattleLogType.Swap:
                     SwapLog swapLog = JsonSerializer.Deserialize<SwapLog>(log.data);
+                    Info($"{(swapLog.team == clientID ? "You" : "Opponent")} switched into {swapLog.fighterID}");
                     clientBattleUI.RunSwap(swapLog.team == clientID, swapLog.swapToIndex, swapLog.fighterID);
                     break;
                 case BattleLogType.Damage:
                     DamageLog damageLog = JsonSerializer.Deserialize<DamageLog>(log.data);
+                    Info($"{(damageLog.team == clientID ? "You" : "Opponent")} took {damageLog.damage} damage");
                     clientBattleUI.RunDamage(damageLog.team == clientID, damageLog.damage);
                     break;
                 case BattleLogType.Death:
                     int team = log.data.ToInt();
+                    Info($"{(team == clientID ? "Your" : "Opponent's")} fighter died!");
                     clientBattleUI.RunDeath(clientID == team);
                     break;
                 case BattleLogType.StartTurn:
@@ -155,19 +155,12 @@ public partial class ChatClient : Control
         clientBattleUI.SetExpectedResponse(response);
     }
 
-    void LoadGameUI()
-    {
-
-    }
-
-    // UI Signals
     void OnSendPressed()
     {
 
         if (_lineEdit.Text == "") return;
         Info($"Sending message: {_lineEdit.Text}");
         ClientToServerMessage message = new ClientToServerMessage(ClientToServerMessageType.JoinRoom, _lineEdit.Text);
-        // string sendContent = @$"{""type"": 0, ""id"": 1, ""data"": ""{}""}";
         string sendContent = JsonSerializer.Serialize(message);
         GD.Print($"client is sending message: {sendContent}");
         _client.Send(sendContent);
@@ -176,13 +169,11 @@ public partial class ChatClient : Control
     void OnSelectAction(int actionID)
     {
         Info($"Sending action with ID: {actionID}");
-        // _client.Send($"!act{actionID}");
         SendMessage(ClientToServerMessageType.Action, actionID.ToString());
     }
     void OnSelectSwap(int swapID)
     {
         Info($"Sending swap with ID: {swapID}");
-        // _client.Send($"!act{actionID}");
         SendMessage(ClientToServerMessageType.Swap, swapID.ToString());
     }
     void OnSendTeam()
@@ -200,7 +191,6 @@ public partial class ChatClient : Control
     {
         int roomID = (int)_roomID.Value;
         Info($"Sending request to join room: {roomID}");
-        // _client.Send($"!joi{roomID}");
         SendMessage(ClientToServerMessageType.JoinRoom, roomID.ToString());
     }
 
@@ -240,12 +230,10 @@ public partial class ChatClient : Control
 public struct ClientToServerMessage
 {
     public ClientToServerMessageType messageType { get; set; }
-    // public int id;
     public string data { get; set; }
     public ClientToServerMessage(ClientToServerMessageType messageType, string data)
     {
         this.messageType = messageType;
-        // this.id = id;
         this.data = data;
     }
 }
@@ -253,12 +241,10 @@ public struct ClientToServerMessage
 public struct ServerToClientMessage
 {
     public ServerToClientMessageType messageType { get; set; }
-    // public int id;
     public string data { get; set; }
     public ServerToClientMessage(ServerToClientMessageType messageType, string data)
     {
         this.messageType = messageType;
-        // this.id = id;
         this.data = data;
     }
 }
@@ -272,7 +258,6 @@ public enum ServerToClientMessageType
     ConfirmJoin, ConfirmTeam, Error, StartMatch, BattleLog, MatchResult, MatchState, Alert
 }
 
-// public record struct StartMatchInfo(int teamID, TeamJson playerTeam, string enemyFighter);
 public struct StartMatchInfo
 {
     public int teamID { get; set; }

@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://Scenes/Client/client_ui/FighterIcon.cs" id="1_m2ns5"]
 
 [node name="FighterIcon" type="Control"]
-custom_minimum_size = Vector2(40, 40)
+custom_minimum_size = Vector2(60, 60)
 layout_mode = 3
 anchors_preset = 0
 offset_right = 40.0
@@ -15,7 +15,7 @@ custom_minimum_size = Vector2(50, 50)
 layout_mode = 0
 offset_right = 50.0
 offset_bottom = 50.0
-scale = Vector2(0.5, 0.5)
+expand_icon = true
 
 [node name="HealthLabel" type="RichTextLabel" parent="."]
 layout_mode = 0

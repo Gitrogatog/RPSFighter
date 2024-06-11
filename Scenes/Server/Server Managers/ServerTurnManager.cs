@@ -16,24 +16,15 @@ public partial class ServerTurnManager : Node
     public static event Action<int, int> AddPlayerToRoom = delegate { };
     public event Action TurnEndEvent = delegate { };
     public event Action<bool, bool> DeathSwapEvent = delegate { };
-
-
-    // public void AddTurn(int playerIndex, IAction action)
-    // {
-    //     actionQueue[playerIndex] = action;
-    // }
+    public event Action<int> MatchEndedEvent = delegate { };
 
     public void Initialize(BaseFighter[] p1Team, BaseFighter[] p2Team)
     {
         currentTurn = 1;
         player1Team = new PlayerTeamInfo(p1Team);
         player2Team = new PlayerTeamInfo(p2Team);
-        GD.Print("TURN MANAGER WAS INITIALIZED!!!");
     }
-    // public void ReceiveTurnInput(int playerIndex, IAction action)
-    // {
 
-    // }
     public void RunActions(IAction player1Action, IAction player2Action)
     {
         if (!expectingEndOfTurnSwap)
@@ -49,7 +40,6 @@ public partial class ServerTurnManager : Node
     }
     void RunTurn(IAction player1Action, IAction player2Action)
     {
-        // DecideTurnOrder(player1Action, player2Action);
         actionQueue[0] = player1Action;
         actionQueue[1] = player2Action;
         RunStartTurnEffects();
@@ -182,6 +172,7 @@ public partial class ServerTurnManager : Node
         logManager.RegisterDamage(targetTeam, finalDamage);
         GD.Print($"P{1 - targetTeam} dealt {finalDamage} damage to P{targetTeam}");
         CheckForDefeat();
+
     }
     void CheckForDefeat()
     {
@@ -199,6 +190,30 @@ public partial class ServerTurnManager : Node
             player2Team.activeFighterIndex = -1;
             logManager.RegisterDeath(1);
         }
+        CheckForWinLoss();
+    }
+    void CheckForWinLoss()
+    {
+        if (CheckLoss(0))
+        {
+            MatchEndedEvent.Invoke(0);
+        }
+        else if (CheckLoss(1))
+        {
+            MatchEndedEvent.Invoke(1);
+        }
+    }
+    bool CheckLoss(int playerID)
+    {
+        var team = playerID == 0 ? player1Team.team : player2Team.team;
+        for (int i = 0; i < team.Length; i++)
+        {
+            if (team[i].status != StatusCondition.Dead)
+            {
+                return false;
+            }
+        }
+        return true;
     }
     public BaseFighter GetActiveFighter(int team)
     {

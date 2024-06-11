@@ -5,12 +5,13 @@
 [ext_resource type="Script" path="res://WebSocketClient.cs" id="3_d7anu"]
 [ext_resource type="PackedScene" uid="uid://cpamntn5ic7ro" path="res://Scenes/Client/client_ui/client_battle_ui.tscn" id="4_2cxr7"]
 
-[node name="Client" node_paths=PackedStringArray("_client", "_logDest", "_lineEdit", "_host", "_roomID", "_actionID", "clientBattleUI") instance=ExtResource("1_8facw")]
+[node name="Client" node_paths=PackedStringArray("_client", "_logDest", "_lineEdit", "_host", "_roomID", "clientBattleUI") instance=ExtResource("1_8facw")]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = -826.0
-offset_bottom = -474.0
+offset_left = 2.0
+offset_right = -817.465
+offset_bottom = 0.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
@@ -21,7 +22,6 @@ _logDest = NodePath("Panel/VBoxContainer/RichTextLabel")
 _lineEdit = NodePath("Panel/VBoxContainer/Send/LineEdit")
 _host = NodePath("Panel/VBoxContainer/Connect/Host")
 _roomID = NodePath("Panel/VBoxContainer/Room/RoomID")
-_actionID = NodePath("")
 clientBattleUI = NodePath("ClientBattleUI")
 
 [node name="WebSocketClient" type="Node2D" parent="." index="0"]
@@ -54,6 +54,9 @@ toggle_mode = true
 visible = false
 
 [node name="Listen" parent="Panel/VBoxContainer/Connect" index="3"]
+visible = false
+
+[node name="Send" parent="Panel/VBoxContainer" index="2"]
 visible = false
 
 [node name="Room" type="HBoxContainer" parent="Panel/VBoxContainer" index="3"]
